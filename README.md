@@ -11,7 +11,7 @@ This Vagrant Box provides
 Ansible is used to provision the box.
 
 ### Prerequisites
-VirtualBox, VirtualBox Guest Additions and Vagrant (minimum version >= 1.7.4)
+VirtualBox, VirtualBox Guest Additions and Vagrant (minimum version >= 1.8.1)
 
 ### Setup Vagrant Environment
 
@@ -28,7 +28,6 @@ rm -rf virtualbox*.deb
 
 ```
 echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" | sudo tee -a /etc/apt/sources.list.d/virtualbox.list
-
 wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 
 sudo apt-get update
