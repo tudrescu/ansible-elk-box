@@ -1,0 +1,79 @@
+---
+# Configure Logstash
+
+# Get list of non-ansible mananaged configs to transfer
+- name: Get the list of static configs to transfer
+  local_action: "shell ls {{ role_path }}/templates/{{ logstash_static_config_files }}/* | sed 's~.*/~~g'"
+  register: logstash_static_templates
+  when: logstash_static_config_files is defined
+
+# TODO build checks, maybe use file glob?
+# Get list of ansible-managed config files to transfer
+# Use file names without the j2 extension
+- name: Get list of dynamic configs to transfer
+  local_action: "shell ls {{ role_path }}/templates/{{ logstash_dynamic_config_files }}/* | sed 's~.*/~~g' | sed 's/.[^.]*$//g'"
+  register: logstash_dynamic_templates
+  when: logstash_dynamic_config_files is defined
+
+# the indexing templates will be referenced in the logstash configs
+- name: Get list of Logstash indexing templates to transfer
+  local_action: "shell ls {{ role_path }}/templates/{{ logstash_es_custom_index_templates }}/* | sed 's~.*/~~g'"
+  register: logstash_index_templates
+  when: logstash_es_custom_index_templates is defined
+
+# Clean and delete unmanaged files from logstash config dir
+- shell: ls -1 "{{ logstash_conf_dir }}/"
+  register: logstash_conf_contents
+
+- name: Removing unmanaged files from logstash config dir
+  file: path={{ logstash_conf_dir }}/{{ item }} state=absent
+  with_items: logstash_conf_contents.stdout_lines
+  when: item not in (( logstash_static_templates.stdout.splitlines() + logstash_dynamic_templates.stdout.splitlines() + logstash_index_templates.stdout.splitlines() )
+  when: (logstash_static_config_files is defined or logstash_dynamic_config_files or logstash_es_custom_index_templates)
+
+
+# Copy custom indexing Templates
+- name: Copy Logstash custom indexing templates
+  template: >
+    src={{ logstash_es_custom_index_templates }}/{{ item }}
+    dest={{ logstash_index_templates_dir }}/{{ item }}
+    owner=root
+    group=root
+    mode=0644
+  with_items:
+    - "{{ logstash_index_templates.stdout.splitlines() }}"
+  notify:
+   - Restart Logstash
+  when: logstash_es_custom_index_templates is defined
+
+
+# Copy non-ansible logstash configs
+- name: Copy Logstash static config files
+  template: >
+    src={{ logstash_static_config_files }}/{{ item }}
+    dest={{ logstash_conf_dir }}/{{ item }}
+    owner=root
+    group=root
+    mode=0644
+    validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+  with_items:
+    - "{{ logstash_static_templates.stdout.splitlines() }}"
+  notify:
+   - Restart Logstash
+  when: logstash_static_config_files is defined
+
+
+# Copy ansible-managed logstash configs
+- name: Copy Logstash dynamic config files
+  template: >
+    src="{{ logstash_dynamic_config_files }}/{{ item }}.j2"
+    dest={{ logstash_conf_dir }}/{{ item }}
+    owner=root
+    group=root
+    mode=0644
+    validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+  with_items:
+    - "{{ logstash_dynamic_templates.stdout.splitlines() }}"
+  notify:
+   - Restart Logstash
+  when: logstash_dynamic_config_files is defined

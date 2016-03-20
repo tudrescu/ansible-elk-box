@@ -1,0 +1,16 @@
+---
+
+# Configure timezone for host
+- name: Configuring timezone
+  shell: echo {{ selected_timezone }} > /etc/timezone; dpkg-reconfigure --frontend noninteractive tzdata
+
+# Update repos
+- name: Install python-software-properties and Apt repositories
+  apt: pkg=python-software-properties state=present update_cache=yes cache_valid_time={{ apt_cache_valid_time }}
+  environment: "{{ proxy_env }}"
+
+# Install dependencies
+- name: Install common dependencies
+  apt: pkg={{ item }} state=present
+  with_items: "{{ common_apt_dependencies }}"
+  environment: "{{ proxy_env }}"

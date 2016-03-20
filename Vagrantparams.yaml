@@ -1,0 +1,17 @@
+# Vagrant specific variables
+vm_cpus: "2"
+vm_memory: "6144"
+vm_base_box: "ubuntu/trusty64"
+
+vbguest_auto_update: true
+
+# Variables to pass to bootstrap script
+use_proxy: false
+
+config_proxy_http: "http://proxy.example.de:800"
+config_proxy_https: "http://proxy.example.de:800"
+config_no_proxy: "localhost,127.0.0.1,.example.de"
+
+ansible_tags: "common,java,elasticsearch,kibana,logstash"       # ELK stack
+# ansible_tags: "apache2,mapproxy"                              # Apache2 + Mapproxy
+# ansible_tags: "jenkins"                                       # jenkins

@@ -1,0 +1,92 @@
+---
+# Elasticsearch Ansible Variables
+
+# depends on ansible-common-dependencies role
+
+elasticsearch_heap_size: 2g
+
+elasticsearch_index_number_of_shards: 1
+elasticsearch_index_number_of_replicas: 0
+
+elasticsearch_cluster_name:  es-ansible                     # change node name in variables
+elasticsearch_node_name: es-ansible-node                    #
+
+
+elasticsearch_branch: "2.x"
+elasticsearch_debian_repo: "deb http://packages.elastic.co/elasticsearch/{{ elasticsearch_branch }}/debian stable main"
+elasticsearch_repo_key: https://packages.elastic.co/GPG-KEY-elasticsearch
+elasticsearch_apt_source_list: "/etc/apt/sources.list.d/elasticsearch-{{ elasticsearch_branch }}.list"
+
+elasticsearch_user: elasticsearch
+elasticsearch_group: elasticsearch
+
+
+# important for Vagrant port forwarding
+elasticsearch_network_host: 0.0.0.0
+# elasticsearch_network_http_port: 9200
+
+# Elasticsearch directories
+elasticsearch_conf_dir: /etc/elasticsearch
+elasticsearch_home_dir: /usr/share/elasticsearch
+elasticsearch_plugin_dir: /usr/share/elasticsearch/plugins
+
+# elasticsearch_log_dir: /var/log/elasticsearch
+# elasticsearch_data_dir: /var/lib/elasticsearch
+# elasticsearch_work_dir: /tmp/elasticsearch
+
+
+elasticsearch_scripts_dir: "{{ elasticsearch_conf_dir }}/scripts"              # custom Groovy/Native scripts
+elasticsearch_templates_dir: "{{ elasticsearch_conf_dir }}/templates"          # indexing Templates
+
+
+# path to snapshot restore location
+elasticsearch_repo_dir:
+  - { dir: "/tmp/esbackup" }
+#  - { dir: "/vagrant/esbackup" }                                              # trouble with normal hosts
+
+
+# plugins are broken!
+elasticsearch_plugins:
+  - { short: 'kopf', name: 'lmenezes/elasticsearch-kopf' }
+  - { short: 'license', name: 'license' }
+  - { short: 'marvel-agent', name: 'marvel-agent' }
+
+# elasticsearch_templates:
+#    - { name: 'elasticsearch_custom_template.json'}
+
+# elasticsearch_scripts:
+#   - { name: ''}
+
+
+# Elasticsearch Service
+elasticsearch_service_startonboot: yes
+elasticsearch_service_state: started
+
+
+# Special Elasticsearch options
+# elasticsearch_max_open_files: 65535
+# elasticsearch_max_locked_memory: unlimited
+# elasticsearch_max_map_count: 262144
+# elasticsearch_java_opts: "-XX:-UseSuperWord"
+
+
+# elasticsearch_index_mapper_dynamic: "true"
+# elasticsearch_memory_bootstrap_mlockall: "true"
+# elasticsearch_java_home: /usr/lib/jvm/java-8-oracle
+
+# elasticsearch_misc_query_bool_max_clause_count: 4096
+# elasticsearch_misc_disable_delete_all_indices: "true"
+# elasticsearch_env_use_gc_logging
+# elasticsearch_gateway_type: local
+# elasticsearch_gateway_recover_after_nodes: 1
+# elasticsearch_gateway_recover_after_time: 2m
+# elasticsearch_gateway_expected_nodes: 1
+# elasticsearch_discovery_zen_minimum_master_nodes: 1
+# elasticsearch_discovery_zen_ping_timeout: 30s
+# elasticsearch_discovery_zen_ping_multicast_enabled: "true"
+# elasticsearch_misc_auto_create_index: "true"
+
+# elasticsearch_thread_pools:
+#   - "threadpool.bulk.type: fixed"
+#   - "threadpool.bulk.size: 50"
+#   - "threadpool.bulk.queue_size: 1000"

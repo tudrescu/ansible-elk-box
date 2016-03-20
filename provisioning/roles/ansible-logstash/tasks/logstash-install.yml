@@ -1,0 +1,47 @@
+---
+
+- name: Add Logstash Repo Key
+  apt_key: >
+    url="{{ logstash_repo_key }}"
+    state=present
+    validate_certs={{ validate_apt_certificates }}
+  environment: "{{ proxy_env }}"
+  #     http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+  #     https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+  #     no_proxy: "{{ java_no_proxy_host }}"
+  # when: java_useproxy == "true"
+
+- name: Add Logstash Debian repository
+  shell: echo "{{ logstash_apt_repo }}" | sudo tee "{{ logstash_apt_source_list }}"
+  # always_run: True
+
+- name: Install Logstash
+  apt: >
+    pkg=logstash update_cache=yes state=latest
+  environment: "{{ proxy_env }}"
+
+- debug: var=logstash_defaults
+
+- name: Configure default settings for Logstash
+  template: >
+    src=defaults.conf.j2
+    dest="/etc/default/logstash"
+    owner=root
+    group=root
+    mode=0644
+    backup=yes
+  notify:
+   - Restart Logstash
+
+# Configure index templates directory
+- name: Configuring directories
+  file: >
+    path={{ logstash_index_templates_dir }} state=directory
+    owner=root
+    group=root
+    recurse=yes
+  when: logstash_index_templates_dir is defined
+
+# Register Logstash service to start on boot
+- name: Ensure Logstash is started on boot
+  service: name=logstash enabled={{ logstash_service_startonboot }} state={{ logstash_service_state }}

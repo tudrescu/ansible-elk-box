@@ -1,0 +1,10 @@
+---
+
+- include: install-mysql.yml
+  tags:
+    - install-mysql
+
+- include: update-root-password.yml
+  tags:
+    - install-mysql
+    - configure-mysql

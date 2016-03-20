@@ -1,0 +1,68 @@
+---
+
+# Configure user and group
+- name: Configuring Kibana user and group
+  group: name={{ kibana_group }}
+
+- user: name={{ kibana_user }} group={{ kibana_group }} createhome=no
+
+# Check whether we have aleady installed the same version
+- shell: if [ -e {{ kibana_dir }}/README.txt ]; then KIBANA_VERS=$(grep -Fxs "Kibana {{ kibana_version }}" {{ kibana_dir }}/README.txt); echo "yes"; else echo "no"; fi;
+  register: version_exists
+  always_run: True
+
+# Remove directory if needed
+- name: Remove Kibana Directory if needed
+  file: path={{ kibana_dir }} state=absent
+  when: version_exists.stdout == 'no' or kibana_force_install == 'true'
+
+- name: Ensure Kibana Directory exists
+  file: path={{ kibana_dir }} state=directory
+
+# Download archive if needed
+- name: Download Kibana archive
+  get_url: >
+    url={{ kibana_download_url }}/kibana-{{ kibana_version }}-{{ kibana_os }}-{{ kibana_arch }}.tar.gz
+    dest=/tmp/kibana-{{ kibana_version }}-{{ kibana_os }}-{{ kibana_arch }}.tar.gz
+    validate_certs={{ validate_apt_certificates }}
+  when: (version_exists.stdout == 'no' or kibana_force_install == 'true')
+  environment: "{{ proxy_env }}"
+
+# - name: Download Kibana archive with proxy
+#   get_url: >
+#     url={{ kibana_download_url }}/kibana-{{ kibana_version }}-{{ kibana_os }}-{{ kibana_arch }}.tar.gz dest=/tmp/kibana-{{ kibana_version }}-{{ kibana_os }}-{{ kibana_arch }}.tar.gz validate_certs={{ validate_apt_certificates }}
+#   environment:
+#     http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+#     https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+#     no_proxy: "{{ java_no_proxy_host }}"
+#   when: (version_exists.stdout == 'no' or kibana_force_install == 'true') and java_useproxy == 'true'
+
+- name: Extract and install Kibana
+  command: /bin/tar xfz /tmp/kibana-{{ kibana_version }}-{{ kibana_os }}-{{ kibana_arch }}.tar.gz -C {{ kibana_dir }}/ --strip-components 1 --overwrite --overwrite-dir --no-same-owner
+  when: version_exists.stdout == 'no' or kibana_force_install == 'true'
+
+# Configure directories
+- name: Configuring Log directory
+  file: path={{ kibana_log_dir }} state=directory owner={{ kibana_user }} group={{ kibana_group }} recurse=yes
+  when: kibana_log_dir is defined
+
+# Configure directories
+- name: Fix permissions Kibana Home
+  file: path={{ kibana_dir }} state=directory owner={{ kibana_user }} group={{ kibana_group }} recurse=yes
+
+# Configure Kibana, copy init.d scripts
+- name: Copy defaults to /etc/default/kibana
+  template: src=kibana_etc_default.j2 dest=/etc/default/kibana mode=0644
+  notify: Restart Kibana
+
+- name: Copy init script to /etc/init.d/kibana
+  template: src=kibana_init_d.j2 dest=/etc/init.d/kibana mode=0755
+  notify: Restart Kibana
+
+- name: Configure Kibana
+  template: src=kibana.yml.j2 dest={{ kibana_dir }}/config/kibana.yml
+  notify: Restart Kibana
+
+# Register Kibana service to start on boot
+- name: Ensure Kibana is started on boot
+  service: name=kibana enabled={{ kibana_service_startonboot }} state={{ kibana_service_state }}

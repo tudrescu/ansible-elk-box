@@ -1,0 +1,11 @@
+---
+
+mysql_root_password: "vagrant"
+
+mysql_apt_dependencies:
+  - { name: 'python-mysqldb' }
+  - { name: 'mysql-server' }
+
+# MySQL service
+mysql_service_state: started
+mysql_service_startonboot: yes

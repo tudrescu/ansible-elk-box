@@ -1,0 +1,16 @@
+---
+# Tasks for the ansible-logstash role
+
+- include: logstash-install.yml
+  tags:
+    - install-logstash
+
+- include: logstash-plugins.yml
+  tags:
+    - install-logstash
+    - install-logstash-plugins
+
+# - include: logstash-configuration.yml
+#   tags:
+#     - install-logstash
+#     - configure-logstash

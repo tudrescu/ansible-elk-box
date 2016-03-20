@@ -1,0 +1,4 @@
+---
+# Ansible variables for MySQL
+
+mysql_root_password: "vagrant"

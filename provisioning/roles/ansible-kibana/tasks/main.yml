@@ -1,0 +1,14 @@
+---
+
+- include: install-kibana.yml
+  notify: Restart Kibana
+  tags:
+    - install-kibana
+
+# deal with plugins
+- include: install-plugins.yml
+  when: (kibana_plugins is defined)
+  notify: Restart Kibana
+  tags:
+    - install-kibana
+    - install-kibana-plugins

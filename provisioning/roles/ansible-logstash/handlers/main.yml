@@ -1,0 +1,5 @@
+---
+# handlers file for ansible-logstash role
+
+- name: Restart Logstash
+  service: name=logstash state=restarted enabled=yes

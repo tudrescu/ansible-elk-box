@@ -1,0 +1,3 @@
+---
+# Jenkins Ansible variables
+# overrides defaults in ansible-jenkins role

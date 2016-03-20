@@ -1,0 +1,9 @@
+---
+
+- name: Update APT Cache
+  apt: update_cache=yes cache_valid_time={{ apt_cache_valid_time }}
+  environment: "{{ proxy_env }}"
+  
+- name: Install Elasticsearch Python Client through pip
+  pip: name=elasticsearch
+  environment: "{{ proxy_env }}"

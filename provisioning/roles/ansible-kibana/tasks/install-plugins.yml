@@ -1,0 +1,26 @@
+- name: Removing Plugins if they exist
+  action: >
+      shell bin/kibana plugin --remove {{ item.short }}
+      chdir={{ kibana_dir }}
+  with_items: "{{ kibana_plugins }}"
+  ignore_errors: yes
+
+- name: Installing Plugins by Name
+  action: >
+      shell bin/kibana plugin --install {{ item.name }}
+      chdir={{ kibana_dir }}
+  with_items: "{{ kibana_plugins }}"
+  ignore_errors: yes
+  environment: "{{ proxy_env }}"
+
+# - name: Installing Plugins by Name with proxy
+#   action: >
+#       shell bin/kibana plugin --install {{ item.name }}
+#       chdir={{ kibana_dir }}
+#   with_items: "{{ kibana_plugins }}"
+#   ignore_errors: yes
+#   environment:
+#     http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+#     https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+#     no_proxy: "{{ java_no_proxy_host }}"
+#   when: java_useproxy == 'true'

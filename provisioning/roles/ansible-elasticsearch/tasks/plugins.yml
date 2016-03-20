@@ -1,0 +1,66 @@
+---
+# Install Elasticsearch Plugins
+#
+# You will need to define an array called 'elasticsearch_plugins' in your playbook or inventory, such that:
+#
+# elasticsearch_plugins:
+#  - { short: '<short name'>, name: '<plugin name>' or url: '<[optional] plugin url>' }
+#  - ...
+# where if you were to install the plugin via bin/plugin, you would type:
+#
+# bin/plugin install <plugin name>
+#
+# or
+#
+# bin/plugin install <plugin url>
+#
+# To use a proxy set variables
+#
+#          java_proxy_port
+#          java_proxy_host
+#
+# Example for kopf plugin (bin/plugin install lmenezes/elasticsearch-kopf):
+# elasticsearch_plugins:
+#  - { short: 'kopf', name: 'lmenezes/elasticsearch-kopf' }
+#
+# Example for https://github.com/imotov/elasticsearch-facet-script (bin/plugin install http://dl.bintray.com/content/imotov/elasticsearch-plugins/elasticsearch-facet-script-1.1.2.zip):
+# elasticsearch_plugins:
+#  - { url: 'http://dl.bintray.com/content/imotov/elasticsearch-plugins/elasticsearch-facet-script-1.1.2.zip' }
+
+- name: Removing Plugins if they exist
+  action: >
+      shell bin/plugin remove {{ item.short }}
+      chdir={{ elasticsearch_home_dir }}
+  with_items: "{{ elasticsearch_plugins }}"
+  ignore_errors: yes
+
+- name: Installing Plugins by Name
+  action: >
+      shell bin/plugin install {{ item.name }}
+      chdir={{ elasticsearch_home_dir }}
+  when: item.url is not defined and (java_useproxy == "false")
+  with_items: "{{ elasticsearch_plugins }}"
+  ignore_errors: yes
+
+- name: Installing Plugins by Name through Proxy
+  action: >
+      shell bin/plugin -DproxyPort={{ java_proxy_port }} -DproxyHost={{ java_proxy_host }} install {{ item.name }}
+      chdir={{ elasticsearch_home_dir }}
+  when: item.url is not defined and (java_useproxy == "true")
+  with_items: "{{ elasticsearch_plugins }}"
+  ignore_errors: yes
+
+- name: Installing Plugins by File URL
+  action: >
+    shell bin/plugin install {{ item.url }}
+    chdir={{ elasticsearch_home_dir }}
+  when: item.url is defined
+  with_items: "{{ elasticsearch_plugins }}"
+  ignore_errors: yes
+
+
+# Fix file permissions
+- file: >
+    path="{{ elasticsearch_plugin_dir }}" state=directory
+    owner={{ elasticsearch_user }} group={{ elasticsearch_group }}
+    recurse=yes

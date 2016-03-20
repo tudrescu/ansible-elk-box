@@ -1,0 +1,44 @@
+---
+
+# change listen port
+
+- name: Configure Apache2 listen port
+  lineinfile: >
+    dest=/etc/apache2/ports.conf
+    regexp="^Listen "
+    line="Listen {{ apache2_http_port }}"
+    state=present
+  notify:
+    - Restart Apache2
+
+- name: Configure Apache2 virtualhost
+  lineinfile: >
+    dest=/etc/apache2/sites-available/000-default.conf
+    regexp="^<VirtualHost \*:" line="<VirtualHost *:{{ apache2_http_port }}>"
+    state=present
+  notify:
+    - Restart Apache2
+
+- name: Ensure resource directory exists
+  file: path={{ static_resources_dir }} state=directory
+
+# Create symlinked directory for resources
+- name: Activate static directory with symlink
+  file: >
+    src={{ static_resources_dir }}
+    dest={{ virtual_host_root }}/resources
+    owner={{ www_data_user }}
+    group={{ www_data_group }}
+    state=link
+
+# Fix permissions
+- file: >
+    path="{{ static_resources_dir }}" state=directory
+    mode=0755
+    recurse=yes
+
+# TODO configure separate VirtualHost
+- name: change default virtual host
+  template: src=virtualhost.conf.j2 dest=/etc/apache2/sites-available/000-default.conf
+  notify:
+    - Restart Apache2

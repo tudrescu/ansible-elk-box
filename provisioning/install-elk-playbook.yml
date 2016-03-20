@@ -1,0 +1,100 @@
+---
+
+#########################
+# Common deps           #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: common
+  roles:
+    - ansible-common-dependencies
+
+#########################
+# Java                  #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: java
+  roles:
+    - ansible-java
+
+#########################
+# Elasticsearch install #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: elasticsearch
+  roles:
+    - ansible-elasticsearch
+
+#########################
+# Kibana install        #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: kibana
+  roles:
+    - ansible-kibana
+
+#########################
+# Logstash install      #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: logstash
+  roles:
+    - ansible-logstash
+
+
+#########################
+# Apache2 install       #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: apache2
+  roles:
+    - ansible-apache2
+
+
+#########################
+# Mapproxy install      #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: mapproxy
+  roles:
+    - ansible-mapproxy
+
+
+#########################
+# Jenkins install       #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: jenkins
+  roles:
+    - ansible-jenkins
+
+
+#########################
+# MySQL install         #
+#########################
+- hosts: all
+  become: true
+  become_method: 'sudo'
+  tags: mysql
+  roles:
+    - ansible-mysql
+
+
+# ##########################
+# ## Dashboards            #
+# ##########################

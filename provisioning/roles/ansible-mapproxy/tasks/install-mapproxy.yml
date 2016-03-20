@@ -1,0 +1,26 @@
+---
+
+# - name: Update APT Cache
+#   apt: >
+#     update_cache=yes
+#     cache_valid_time={{ apt_cache_valid_time }}
+#   environment: "{{ proxy_env }}"
+
+- name: Install MapProxy dependencies
+  apt: pkg={{ item }} update_cache=yes state=present
+  with_items: "{{ mapproxy_apt_dependencies }}"
+  ignore_errors: yes
+  environment: "{{ proxy_env }}"
+
+- name: Install MapProxy through pip
+  pip: name=mapproxy
+  # when: java_useproxy == 'false'
+  environment: "{{ proxy_env }}"
+
+# - name: Install MapProxy through pip with proxy
+#   pip: name=mapproxy
+#   environment:
+#      http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+#      https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+#      no_proxy: "{{ java_no_proxy_host }}"
+#   when: java_useproxy == 'true'

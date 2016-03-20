@@ -1,0 +1,43 @@
+---
+
+# used in config.py template, overriden by group parameters
+java_useproxy: "false"
+
+java_proxy_port: 800
+java_proxy_host: proxy.example.de
+
+# use apache2 data user
+mapproxy_user: www-data
+mapproxy_group: www-data
+
+mapproxy_wsgi_root_dir: /var/www/html
+
+mapproxy_home_dir: "{{ mapproxy_wsgi_root_dir }}/mapproxy"
+mapproxy_cache_data_dir: "{{ mapproxy_wsgi_root_dir }}/mapproxy/cache_data"
+
+seed_cache: "true"                 # download seeds
+
+mapproxy_service:
+  config: "mapproxy.yml"
+
+mapproxy_seed:
+  config: "seed.yml"
+  min_tile_level: 0                # min tile level to cache
+  max_tile_level: 11               # max title level to cache
+
+mapproxy_apt_dependencies:
+  - python-imaging
+  - python-yaml
+  - libproj0
+  - libgeos-dev
+  - python-lxml
+  - python-shapely
+
+
+# configuration files in templates created using mapproxy-util command
+# mkdir -p mymapproxy
+# mapproxy-util create -t base-config mymapproxy
+
+# seed configuration
+# cd /var/www/html/mapproxy/
+# sudo mapproxy-seed -f mapproxy.yml -s seed.yml

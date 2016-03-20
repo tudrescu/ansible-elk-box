@@ -1,0 +1,21 @@
+---
+
+apache2_modules:
+  - { package: 'libapache2-mod-wsgi' }
+
+apache2_http_port: 8082
+
+virtual_host_port: "{{ apache2_http_port }}"
+virtual_host_domain: localhost
+
+virtual_host_root: "/var/www/html"
+
+www_data_user: "www-data"
+www_data_group: "www-data"
+
+# Apache Service
+apache_service_startonboot: yes
+apache_service_state: started
+
+# static_resources_dir: "/vagrant/resources"
+static_resources_dir: "/var/www/static-resources"

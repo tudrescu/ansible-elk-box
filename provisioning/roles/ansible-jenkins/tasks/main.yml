@@ -1,0 +1,36 @@
+---
+
+# Install Jenkins
+- include: jenkins-install.yml
+  tags:
+    - install-jenkins
+
+# Configure Jenkins
+- include: jenkins-config.yml
+  tags:
+    - install-jenkins
+
+# Configure Jenkins CLI
+- include: jenkins-cli.yml
+  tags:
+    - install-jenkins
+
+# Install/Update Jenkins plugins
+- include: jenkins-plugin.yml
+  tags:
+    - install-jenkins
+    - install-jenkins-plugins
+
+- name: Restart Jenkins now
+  service: name=jenkins state=restarted
+
+- name: Enable the Jenkins service
+  service: name=jenkins enabled={{ jenkins_service_startonboot }} state={{ jenkins_service_state }}
+
+- name: Wait for Jenkins to start up before proceeding.
+  shell: "curl -D - --silent http://localhost:{{ jenkins_port }}/cli/"
+  register: result_jenkins
+  until: (result_jenkins.stdout.find("200 OK") != -1) and (result_jenkins.stdout.find("Please wait while") == -1)
+  retries: 5
+  delay: 10
+  changed_when: false

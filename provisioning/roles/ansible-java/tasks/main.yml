@@ -1,0 +1,7 @@
+---
+
+- debug: msg="Use Proxy {{ java_useproxy }}, Proxy Environment {{ proxy_env }}"
+
+# Install Java8
+- include: install-java.yml
+  tags: install-java8

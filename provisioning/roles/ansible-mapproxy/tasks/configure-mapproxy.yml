@@ -1,0 +1,27 @@
+---
+
+# Create directories
+- file: path={{ mapproxy_home_dir }} state=directory owner={{ mapproxy_user }} group={{ mapproxy_group }} recurse=yes
+  when: mapproxy_home_dir is defined
+
+- file: path={{ mapproxy_cache_data_dir }} state=directory owner={{ mapproxy_user }} group={{ mapproxy_group }} recurse=yes
+  when: mapproxy_cache_data_dir is defined
+
+# Configure Mapproxy
+- name: Configuring Mapproxy
+  template: src=mapproxy.yml.j2 dest={{ mapproxy_home_dir }}/mapproxy.yml owner={{ mapproxy_user }} group={{ mapproxy_group }} mode=0644
+  when: mapproxy_home_dir is defined
+
+- template: src=seed.yml.j2 dest={{ mapproxy_home_dir }}/seed.yml owner={{ mapproxy_user }} group={{ mapproxy_group }} mode=0644
+  when: mapproxy_home_dir is defined
+
+- template: src=config.py.j2 dest={{ mapproxy_home_dir }}/config.py owner={{ mapproxy_user }} group={{ mapproxy_group }} mode=0755
+  when: mapproxy_home_dir is defined
+
+# Copy Germany Polygon Definition
+- template: src=GM.txt dest={{ mapproxy_home_dir }}/GM.txt owner={{ mapproxy_user }} group={{ mapproxy_group }} mode=0644
+  when: mapproxy_home_dir is defined
+
+# Fix permissions
+- file: path={{ mapproxy_home_dir }} state=directory owner={{ mapproxy_user }} group={{ mapproxy_group }} recurse=yes
+  when: mapproxy_home_dir is defined

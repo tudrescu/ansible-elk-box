@@ -1,0 +1,3 @@
+---
+# Ansible variables for Logstash
+# overrides defaults in ansible-logstash role

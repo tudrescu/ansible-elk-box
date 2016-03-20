@@ -1,0 +1,254 @@
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please see the documentation for further information on configuration options:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration.html>
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+# cluster.name: my-application
+{% if elasticsearch_cluster_name is defined %}
+cluster.name: {{ elasticsearch_cluster_name }}
+{% endif %}
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+# node.name: node-1
+{% if elasticsearch_node_name is defined %}
+node.name: {{ elasticsearch_node_name }}
+{% endif %}
+#
+# Add custom attributes to the node:
+#
+# node.rack: r1
+{% if elasticsearch_node_rack is defined %}
+node.rack: {{ elasticsearch_node_rack }}
+{% endif %}
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+# path.data: /path/to/data
+{% if elasticsearch_data_dir is defined %}
+path.data: {{ elasticsearch_data_dir }}
+{% endif %}
+#
+#
+# Path to log files:
+#
+# path.logs: /path/to/logs
+{% if elasticsearch_log_dir is defined %}
+path.logs: {{ elasticsearch_log_dir }}
+{% endif %}
+#
+#
+# Path to directory containing configuration (this file and logging.yml):
+#
+# path.conf: /path/to/conf, default /etc/elasticsearch/
+#
+#
+# Path to temporary files:
+#
+# path.work: /path/to/work
+{% if elasticsearch_work_dir is defined %}
+path.work: {{ elasticsearch_work_dir }}
+{% endif %}
+#
+#
+# Path to where plugins are installed:
+#
+# path.plugins: /path/to/plugins
+{% if elasticsearch_plugin_dir is defined %}
+path.plugins: {{ elasticsearch_plugin_dir }}
+{% endif %}
+#
+#
+# Path to snapshot/restore repost
+#
+# path.repo: //pppp
+# path.repo: [ "/tmp/backup1", "/tmp/backup2" ]
+{% if elasticsearch_repo_dir is defined %}
+path.repo: [ {{ elasticsearch_repo_dir|join(', ', attribute='dir') }} ]
+{% endif %}
+#
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+# bootstrap.mlockall: true
+{% if elasticsearch_memory_bootstrap_mlockall is defined %}
+bootstrap.mlockall: {{ elasticsearch_memory_bootstrap_mlockall }}
+{% endif %}
+#
+# Make sure that the `ES_HEAP_SIZE` environment variable is set to about half the memory
+# available on the system and that the owner of the process is allowed to use this limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# Set the bind adress to a specific IP (IPv4 or IPv6):
+#
+# network.host: 192.168.0.1
+{% if elasticsearch_network_host is defined %}
+network.host: {{ elasticsearch_network_host }}
+{% endif %}
+#
+# Set a custom port for HTTP:
+#
+# http.port: 9200
+{% if elasticsearch_network_http_port is defined %}
+http.port: {{ elasticsearch_network_http_port }}
+{% endif %}
+#
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html>
+#
+# ---------------------------------- Gateway -----------------------------------
+#
+# Block initial recovery after a full cluster restart until N nodes are started:
+#
+# gateway.recover_after_nodes: 3
+#
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-gateway.html>
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Elasticsearch nodes will find each other via unicast, by default.
+#
+# Pass an initial list of hosts to perform discovery when new node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
+# discovery.zen.ping.unicast.hosts: ["host1", "host2"]
+#
+# Prevent the "split brain" by configuring the majority of nodes (total number of nodes / 2 + 1):
+#
+# discovery.zen.minimum_master_nodes: 3
+#
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery.html>
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Disable starting multiple nodes on a single system:
+#
+# node.max_local_storage_nodes: 1
+#
+# Require explicit names when deleting indices:
+#
+# action.destructive_requires_name: true
+#
+# ---------------------------------- Index -------------------------------------
+#
+# Set the number of shards (splits) of an index (1 by default):
+#
+# index.number_of_shards: 1
+{% if elasticsearch_index_number_of_shards is defined %}
+index.number_of_shards: {{ elasticsearch_index_number_of_shards }}
+{% endif %}
+#
+# Set the number of replicas (additional copies) of an index (0 by default):
+#
+# index.number_of_replicas: 0
+{% if elasticsearch_index_number_of_replicas is defined %}
+index.number_of_replicas: {{ elasticsearch_index_number_of_replicas }}
+{% endif %}
+#
+# Use the Index Status API (<http://localhost:9200/A/_status>) to inspect
+# the index status.
+{% if elasticsearch_index_mapper_dynamic is defined %}
+index.mapper_dynamic: {{ elasticsearch_index_mapper_dynamic }}
+{% endif %}
+{% if elasticsearch_misc_query_bool_max_clause_count is defined %}
+index.query.bool.max_clause_count: {{ elasticsearch_misc_query_bool_max_clause_count }}
+{% endif %}
+#
+#
+# ---------------------------- Recovery Throttling -----------------------------
+#
+# These settings allow to control the process of shards allocation between
+# nodes during initial recovery, replica allocation, rebalancing,
+# or when adding and removing nodes.
+#
+#
+# -------------------------------- GC Logging ----------------------------------
+#
+#
+# -------------------------------- Other ---------------------------------------
+#
+#
+# -------------------------------- Shield Settings -----------------------------
+#
+#
+{% if elasticsearch_plugin_shield_enabled is defined %}
+{% if elasticsearch_plugin_shield_enabled == "false"  %}
+
+shield.enabled: false
+
+{% else %}
+
+{% if elasticsearch_plugin_shield_ssl_keystore_path is defined %}
+shield.ssl.keystore.path: {{ elasticsearch_plugin_shield_ssl_keystore_path }}
+{% endif %}
+
+{% if elasticsearch_plugin_shield_ssl_keystore_password is defined %}
+shield.ssl.keystore.password: {{ elasticsearch_plugin_shield_ssl_keystore_password }}
+{% endif %}
+
+{% if elasticsearch_plugin_shield_ssl_keystore_key_password is defined %}
+shield.ssl.keystore.key_password: {{ elasticsearch_plugin_shield_ssl_keystore_key_password }}
+{% endif %}
+
+{% if elasticsearch_plugin_shield_ssl_hostname_verification is defined %}
+shield.ssl.hostname_verification: {{ elasticsearch_plugin_shield_ssl_hostname_verification }}
+{% endif %}
+
+{% if elasticsearch_plugin_shield_transport_ssl is defined %}
+shield.transport.ssl: {{ elasticsearch_plugin_shield_transport_ssl }}
+{% endif %}
+
+{% if elasticsearch_plugin_shield_http_ssl is defined %}
+shield.http.ssl: {{ elasticsearch_plugin_shield_http_ssl }}
+{% endif %}
+
+{% if elasticsearch_plugin_shield_audit_enabled is defined %}
+shield.audit.enabled: {{elasticsearch_plugin_shield_audit_enabled}}
+{% endif %}
+
+{% if elasticsearch_plugin_shield_realms is defined %}
+shield.authc.realms:
+{% if elasticsearch_plugin_shield_realms_esusers is defined %}
+  esusers:
+    type: esusers
+    order: {{ elasticsearch_plugin_shield_realms_esusers.order }}
+    enabled: {{ elasticsearch_plugin_shield_realms_esusers.enabled }}
+{% endif %}
+
+{% if elasticsearch_plugin_shield_realms_active_directory is defined %}
+  active_directory:
+    type: active_directory
+    order: {{ elasticsearch_plugin_shield_realms_active_directory.order }}
+    enabled: {{ elasticsearch_plugin_shield_realms_active_directory.enabled }}
+    domain_name: {{ elasticsearch_plugin_shield_realms_active_directory.domain_name }}
+    unmapped_groups_as_roles: {{ elasticsearch_plugin_shield_realms_active_directory.unmapped_groups_as_roles }}
+    url: {{ elasticsearch_plugin_shield_realms_active_directory.url }}
+    #cache.ttl: 1m
+{% endif %}
+{% endif %}
+{% endif %}
+
+
+{% endif %}

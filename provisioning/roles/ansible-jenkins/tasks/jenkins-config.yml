@@ -1,0 +1,17 @@
+---
+
+- name: Configure Jenkins Port
+  lineinfile: dest="/etc/default/jenkins" regexp="^HTTP_PORT=" line="HTTP_PORT={{ jenkins_port }}"
+  register: config_changed
+
+- name: Restart Jenkins now
+  service: name=jenkins state=restarted
+  when: config_changed.changed
+
+# - name: Configure Jenkins Prefix
+#   when: prefix is defined
+#   lineinfile: dest=/etc/default/jenkins regexp=^PREFIX= line=PREFIX={{ jenkins_prefix }}
+#
+# - name: Configure Jenkins E-mail
+#   when: jenkins_email is defined
+#   templates: src=hudson.tasks.Mailer.xml.j2 dest={{ jenkins_lib }}/hudson.tasks.Mailer.xml owner=jenkins group=jenkins mode=0644

@@ -1,0 +1,36 @@
+---
+
+logstash_es_custom_index_templates: "es-custom-index-templates"
+
+# non-ansible managed configs. located under templates
+# choose proper numbering to mix with ansible-managed configs!
+logstash_static_config_files: "logstash-static-configs"
+
+# ansible managed configs. templates will be sent through Jinja2
+# so variable substitution is available
+logstash_dynamic_config_files: "logstash-dynamic-configs"
+
+# inputs range : 01-input-* > 19-input-*
+# filters range : 20-filter-* > 89-filter-*
+# outputs range: 90-output-* > 99-output-*
+logstash_configs:
+
+    global_vars:
+      frm2json_type: "frm2json"
+
+    inputs:
+        es_file_input_path: "/vagrant/data/**/**/*.log"
+
+    filters:
+
+    outputs:
+        es:
+            host: "localhost"
+            port: "9200"
+            index: "logstash-%{+YYYY.MM.dd}"
+            template: "{{ logstash_index_templates_dir }}/elasticsearch-custom-templates.json"
+            template_name: "logstash"
+
+        redis:
+            host: "localhost"
+            key: "logstash"

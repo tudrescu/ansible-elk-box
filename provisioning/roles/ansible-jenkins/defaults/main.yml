@@ -1,0 +1,59 @@
+---
+# Jenkins Ansible Variables
+
+jenkins_startup_delay_s: 30                  # Wait delay for Jenkins to start up, default 10
+
+jenkins_port: 8080
+
+jenkins_user: 'jenkins'                       # we have to deactivate LADP jenkins user in /etc/sssd/sssd.conf!
+jenkins_group: 'jenkins'
+
+jenkins_dest: "/opt/jenkins"
+jenkins_lib: "/var/lib/jenkins"
+
+# apt dependencies moved to ansible-common-dependencies role
+
+jenkins_deb_repo: 'deb http://pkg.jenkins-ci.org/debian binary/'           # Jenkins repository
+jenkins_apt_key: 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key'
+jenkins_updates_list: 'http://updates.jenkins-ci.org/update-center.json'
+
+jenkins_var:
+  cli_dest: '{{ jenkins_dest }}/jenkins-cli.jar'                           # Jenkins CLI destination
+  updates_dest: '{{ jenkins_dest }}/updates_jenkins.json'                  # Jenkins updates file
+
+jenkins_plugins:
+  - 'ansible'
+  - 'ansicolor'
+  - 'workflow-aggregator'
+  - 'job-dsl'
+  - 'parameterized-trigger'
+  - 'build-with-parameters'
+  - 'build-pipeline-plugin'
+  - 'build-flow-plugin'
+  - 'delivery-pipeline-plugin'
+  - 'buildgraph-view'
+  - 'matrix-project'
+  - 'show-build-parameters'
+  - 'envinject'
+  - 'token-macro'
+  - 'run-condition'
+  - 'external-monitor-job'
+  - 'ldap'
+  - 'credentials'
+  - 'ssh-credentials'
+  - 'ssh-agent'
+  - 'build-timeout'
+  - 'git'
+  - 'git-client'
+  - 'github'
+  - 'github-api'
+  - 'preSCMbuildstep'
+  - 'ant'
+  - 'maven-plugin'
+  - 'locks-and-latches'
+  #  - 'translation'
+  #  - 'ruby-runtime'
+
+# Jenkins Service
+jenkins_service_startonboot: yes
+jenkins_service_state: started

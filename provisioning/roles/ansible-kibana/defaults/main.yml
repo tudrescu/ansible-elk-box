@@ -1,0 +1,54 @@
+---
+# Kibana Ansible defaults
+
+kibana_force_install: "true"
+
+kibana_group: kibana
+kibana_user: kibana
+
+kibana_version: "4.4.2"                         # version to install
+kibana_os: "linux"                              # Kibana operating system build
+kibana_arch: "x64"                              # Kibana architecture build
+
+kibana_dir: "/opt/kibana"                       # Directory to extract the Kibana archive
+
+kibana_host: "0.0.0.0"                          # Kibana address to bind to
+kibana_port: "5601"                             # Kibana port
+
+kibana_elasticsearch: "http://localhost:9200"   # ElasticSearch endpoint
+kibana_index: ".kibana"                         # Kibana index in ElasticSearch
+
+kibana_default_app_id: "discover"               # Default App to Load
+
+# Logging Parameters
+kibana_log_dir: /var/log/kibana
+kibana_log: "{{ kibana_log_dir }}/kibana.log"   # Kibana log path
+
+# # TODO implement with logrotate?
+# kibana_log_rotate_count: 5                      # Log rotation count
+# kibana_log_rotate_interval: daily               # Log rotation interval
+
+# Repositories
+# https://download.elastic.co/kibana/kibana/kibana-4.1.2-linux-x64.tar.gz
+kibana_download_url: "https://download.elastic.co/kibana/kibana"
+
+# kibana_apt_repo: "deb http://packages.elasticsearch.org/kibana/{{ kibana_version }}/debian stable main"
+# kibana_repo_key: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+
+kibana_plugins:
+  - { short: 'marvel', name: 'elasticsearch/marvel/latest' }
+  - { short: 'sense', name: 'elastic/sense' }
+  - { short: 'timelion', name: 'kibana/timelion'}
+
+# Service Parameters
+kibana_service_startonboot: yes
+kibana_service_state: started
+
+# Security
+kibana_verify_ssl: "true"
+# kibana_ca - Certificate
+# kibana_ssl_key_file - Key file
+# kibana_ssl_cert_file - Cert file
+
+# kibana_elasticsearch_username - basic auth username for maintaining the kibana_index
+# kibana_elasticsearch_password - basic auth password for maintaining the

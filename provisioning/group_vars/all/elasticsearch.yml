@@ -1,0 +1,8 @@
+---
+# Elasticsearch Ansible variables
+# overrides defaults in ansible-elasticsearch role
+
+elasticsearch_cluster_name:  es-ansible
+elasticsearch_node_name: es-ansible-node
+
+elasticsearch_heap_size: 2g

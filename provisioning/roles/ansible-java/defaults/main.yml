@@ -1,0 +1,12 @@
+---
+
+apt_cache_valid_time: 10                # seconds between "apt-get update" calls.
+validate_apt_certificates: "no"         # no certificate validation because for APT get key tasks
+
+install_oracle_java: "true"             
+
+# Java and APT dependencies
+custom_apt_repos:
+  - 'ppa:webupd8team/java'
+
+java_apt_package: "oracle-java8-installer"

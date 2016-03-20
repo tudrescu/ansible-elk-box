@@ -1,0 +1,3 @@
+---
+# Kibana Ansible variables
+# overrides defaults in ansible-kibana role

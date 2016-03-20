@@ -1,0 +1,14 @@
+---
+
+java_useproxy: "true"
+
+java_proxy_port: 800
+java_proxy_host: proxy.example.de
+java_proxy_login: ""
+java_proxy_password: ""
+java_no_proxy_host: "localhost, 127.0.0.1, .example.de"
+
+proxy_env:
+  http_proxy:  "http://proxy.example.de:800"
+  https_proxy: "http://proxy.example.de:800"
+  no_proxy:    "localhost, 127.0.0.1, .example.de"

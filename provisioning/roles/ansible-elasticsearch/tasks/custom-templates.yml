@@ -1,0 +1,12 @@
+---
+
+# Loop though elasticsearch_templates and install them
+- name: Installing Custom Templates
+  template: src="{{ item.name }}.j2" dest="{{ elasticsearch_templates_dir }}/{{ item.name }}" mode=0644
+  with_items: elasticsearch_templates
+
+# Fix permissions
+- file: >
+    path={{ elasticsearch_templates_dir }} state=directory
+    owner={{ elasticsearch_user }} group={{ elasticsearch_group }}
+    recurse=yes

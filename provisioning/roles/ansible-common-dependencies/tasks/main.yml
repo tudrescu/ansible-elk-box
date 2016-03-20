@@ -1,0 +1,6 @@
+---
+
+# Install python software properties and other utiles
+- include: install-common.yml
+  tags: install-common
+  

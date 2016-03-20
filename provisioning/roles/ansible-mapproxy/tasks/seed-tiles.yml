@@ -1,0 +1,24 @@
+---
+
+- name: Seed MapProxy Cache
+  action: >
+      shell mapproxy-seed -f {{ mapproxy_service.config }} -s {{ mapproxy_seed.config }}
+      chdir={{ mapproxy_home_dir }}
+  # when: seed_cache == 'true' and java_useproxy == 'false'
+  when: seed_cache == 'true'
+  environment: "{{ proxy_env }}"
+
+# - name: Seed MapProxy Cache with proxy
+#   action: >
+#       shell mapproxy-seed -f {{ mapproxy_service.config }} -s {{ mapproxy_seed.config }}
+#       chdir={{ mapproxy_home_dir }}
+#   environment:
+#      http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+#      https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
+#      no_proxy: "{{ java_no_proxy_host }}"
+#   when: seed_cache == 'true' and java_useproxy == 'true'
+
+
+# Fix file permissions
+- file: path={{ mapproxy_cache_data_dir }} state=directory owner={{ mapproxy_user }} group={{ mapproxy_group }} recurse=yes
+  when: mapproxy_cache_data_dir is defined and seed_cache == 'true'

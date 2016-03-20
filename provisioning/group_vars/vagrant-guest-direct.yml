@@ -1,0 +1,5 @@
+---
+
+java_useproxy: "false"
+
+proxy_env:

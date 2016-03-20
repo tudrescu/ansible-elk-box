@@ -1,0 +1,3 @@
+---
+# Ansible variables for Apache2
+# overrides defaults in ansible-apache2 role

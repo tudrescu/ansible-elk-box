@@ -1,0 +1,15 @@
+---
+
+- include: install-mapproxy.yml
+  tags:
+    - install-mapproxy
+
+- include: configure-mapproxy.yml
+  tags:
+    - install-mapproxy
+    - configure-mapproxy
+
+- include: seed-tiles.yml
+  tags:
+    - install-mapproxy 
+    - seed-tiles

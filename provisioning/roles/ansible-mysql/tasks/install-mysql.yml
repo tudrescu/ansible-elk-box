@@ -1,0 +1,12 @@
+---
+
+# - name: Update APT Cache
+#   apt: update_cache=yes
+
+- name: Install MySQL dependencies
+  apt: pkg={{ item.name }} update_cache=yes state=present
+  with_items: "{{ mysql_apt_dependencies }}"
+  environment: "{{ proxy_env }}"
+
+- name: Ensure MySQL service starts on boot
+  service: name=mysql state={{ mysql_service_state }} enabled={{ mysql_service_startonboot }}  
