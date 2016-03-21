@@ -18,15 +18,6 @@ VirtualBox, VirtualBox Guest Additions and Vagrant (minimum version >= 1.8.1)
 Install Oracle VirtualBox
 
 ```bash
-sudo apt-get update
-sudo apt-get install linux-headers-generic build-essential dkms
-mkdir -p /tmp/vagrant_install && cd /tmp/vagrant_install
-wget "http://download.virtualbox.org/virtualbox/5.0.16/virtualbox-5.0_5.0.16-105871~Ubuntu~trusty_amd64.deb"
-sudo dpkg -i virtualbox*.deb
-rm -rf virtualbox*.deb
-```
-
-```
 echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" | sudo tee -a /etc/apt/sources.list.d/virtualbox.list
 wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 
@@ -57,35 +48,55 @@ rm -rf vagrant*.deb
 # make sure that the ~/.vagrant.d directory is readable/writable
 ```
 
-Install vagrant-proxyconf to run the box behind a proxy
-```bash
-vagrant plugin install vagrant-proxyconf
-```
-
-Pull Ubuntu Trusy64 box
+Pull a Ubuntu-Trusy64 box or another base box
 ```bash
 vagrant box add ubuntu/trusty64
 ```
 
-Check-out Git repo
+
+#### Proxy Environment
+
+To run the box behind a proxy set the appropriate
+environment variables in ~/.bashrc
 ```bash
+export http_proxy="http://proxy.example.de:800"
+export https_proxy="http://proxy.example.de:800"
+export no_proxy="localhost, 127.0.0.1, .example.de"
 ```
 
-Configure Environment
+and install the vagrant-proxyconf plugin
+```bash
+vagrant plugin install vagrant-proxyconf
+```
+
+
+### Installation
+
+Check-out git repo
+```bash
+git clone https://github.com/tudrescu/ansible-elk-box.git
+cd ~/ansible-elk-box
+```
+
+Configure environment & start provisioning
 
 Edit Vagrantparams.yaml to change defaults and then run
 ```bash
+cd ~/ansible-elk-box
 vagrant up
 ```
 
-Supported variables in Vagrantparams.yaml:
+Supported variables in Vagrantparams.yaml.
 
     vm_cpus: 2                          # number of CPUs reserved for the VM, 2 is minimum
     vm_memory: 6144                     # RAM, 4GB is the minimum required
     vm_base_box: "ubunt/trusty64"       # Hashicorp stock Ubuntu 14.04
 
-    java_useproxy: true                 # controls the use of Proxy for Java-based Apps
-    ansible_tags:                       # select modules, default is all
+    vbguest_auto_update: true           # update the Virtual Guest Box Additions automatically. Disable after provisioning
+
+    use_proxy: true                     # when the VM host is behind a proxy
+
+    ansible_tags:                       # select modules
 
 Available ansible_tags
 
@@ -100,20 +111,32 @@ Available ansible_tags
     jenkins
 
 
-Vagrant commands
+Other Vagrant commands
 
 ```bash
-
-vagrant box list       # display boxes
+vagrant box list                             # display boxes
 vagrant box remove
 
-vagrant up             # starts the machine
-vagrant ssh            # ssh to the machine
-vagrant halt           # stutdown the machine
-vagrant provision      # apply the bash/ansible provisioning
+vagrant up                                   # starts the machine
+vagrant ssh                                  # ssh to the machine
+vagrant halt                                 # shutdown the machine
+vagrant provision                            # apply the bash/ansible provisioning
 
 vagrant package --output box_name            # save/package vagrant box
 vagrant box add name-of-this-box box_name
 ```
 
-Disable vbguest autoupdate after first run.
+### Usage
+
+After provisioning, the modules are available under
+
+```bash
+guest: 5601, host: 25601        # Kibana port
+guest: 9200, host: 29200        # Elasticsearch http
+guest: 9300, host: 29300        # Elasticsearch tcp
+guest: 8080, host: 28080        # Jenkins
+guest: 8082, host: 38082        # Apache
+guest: 3306, host: 43306        # MySQL
+```
+
+on the Vagrant guest VM, and the Vagrant host respectively.
