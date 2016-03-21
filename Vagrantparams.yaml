@@ -14,8 +14,7 @@ use_proxy: true
 # config_proxy_https: "http://proxy.example.de:800"
 # config_no_proxy: "localhost,127.0.0.1,.example.de"
 
-ansible_tags: "jenkins"       # ELK stack
 
-# ansible_tags: "common,java,elasticsearch,kibana,logstash"       # ELK stack
+ansible_tags: "common,java,elasticsearch,kibana,logstash"       # ELK stack
 # ansible_tags: "apache2,mapproxy"                              # Apache2 + Mapproxy
 # ansible_tags: "jenkins"                                       # jenkins
