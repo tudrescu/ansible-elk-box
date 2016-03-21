@@ -29,21 +29,8 @@
   shell: >
     curl -L '{{ jenkins_updates_list }}' | sed '1d;$d' > /var/lib/jenkins/updates/default.json
     creates=/var/lib/jenkins/updates/default.json
-  environment: "{ proxy_env }}"
-  # environment:
-  #     http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-  #     https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-  #     no_proxy: "{{ java_no_proxy_host }}"
+  environment: "{{ proxy_env }}"
   always_run: True
-  # when: java_useproxy == 'true'
-
-
-# - name: Update Jenkins plugin data without proxy
-#   shell: >
-#     curl -L '{{ jenkins_updates_list }}' | sed '1d;$d' > /var/lib/jenkins/updates/default.json
-#     creates=/var/lib/jenkins/updates/default.json
-#   always_run: True
-#   when: java_useproxy == 'false'
 
 
 - name: Permissions for default.json updates info.

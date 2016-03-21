@@ -13,30 +13,11 @@
 
 - name: Configure the Jenkins APT key
   apt_key: url='{{ jenkins_apt_key }}' state=present validate_certs={{ validate_apt_certificates }}
-  # when: java_useproxy == 'false'
   environment: "{{ proxy_env }}"
 
 - name: Add Jenkins Repository
   apt_repository: repo='{{ jenkins_deb_repo }}' state=present update_cache=yes
-  # when: java_useproxy == 'false'
   environment: "{{ proxy_env }}"
-
-# # Add jenkins apt-key
-# - name: Configure the Jenkins APT key with proxy
-#   apt_key: url='{{ jenkins_apt_key }}' state=present validate_certs={{ validate_apt_certificates }}
-#   environment:
-#       http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#       https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#       no_proxy: "{{ java_no_proxy_host }}"
-#   when: java_useproxy == 'true'
-
-# - name: Add jenkins Repository with proxy
-#   apt_repository: repo='{{ jenkins_deb_repo }}' state=present update_cache=yes
-#   environment:
-#       http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#       https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#       no_proxy: "{{ java_no_proxy_host }}"
-#   when: java_useproxy == 'true'
 
 - name: Install Jenkins
   apt: name=jenkins update_cache=yes state=latest

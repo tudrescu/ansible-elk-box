@@ -1,5 +1,7 @@
 ---
 
+# just for reference, are overwritten by the bootstrap script
+
 java_useproxy: "true"
 
 java_proxy_port: 800

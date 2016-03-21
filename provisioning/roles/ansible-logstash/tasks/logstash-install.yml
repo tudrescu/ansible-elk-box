@@ -6,10 +6,6 @@
     state=present
     validate_certs={{ validate_apt_certificates }}
   environment: "{{ proxy_env }}"
-  #     http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-  #     https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-  #     no_proxy: "{{ java_no_proxy_host }}"
-  # when: java_useproxy == "true"
 
 - name: Add Logstash Debian repository
   shell: echo "{{ logstash_apt_repo }}" | sudo tee "{{ logstash_apt_source_list }}"

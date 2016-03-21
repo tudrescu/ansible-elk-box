@@ -12,7 +12,8 @@ USE_PROXY=false
 ANSIBLE_TAGS=""
 MAIN_PLAYBOOK="install-elk-playbook.yml"
 
-while getopts "p:t:m:i:l:" opt; do
+ANSIBLE_EXTRA_VARS=""
+while getopts "p:t:m:i:l:e:" opt; do
     case "$opt" in
         p)  USE_PROXY=$OPTARG
             ;;
@@ -23,6 +24,8 @@ while getopts "p:t:m:i:l:" opt; do
         i)  INVENTORY_FILE=$OPTARG
             ;;
         l)  LIMIT=$OPTARG
+            ;;
+        e)  ANSIBLE_EXTRA_VARS=$OPTARG
             ;;
     esac
 done
@@ -42,8 +45,7 @@ ANSIBLE_OPTS+=( "--connection=local" )
 ANSIBLE_OPTS+=( "-vv" )
 ANSIBLE_OPTS+=( "--inventory=/tmp/${INVENTORY_FILE}" )
 # ANSIBLE_OPTS+=( "-l ${LIMIT}" )
-ANSIBLE_OPTS+=( "--extra-vars=\"{java_useproxy=$USE_PROXY}\"" )
-
+ANSIBLE_OPTS+=( "--extra-vars=${ANSIBLE_EXTRA_VARS}" )
 if [[ ! -z "${ANSIBLE_TAGS}" ]]; then
     ANSIBLE_OPTS+=( "--tags=${ANSIBLE_TAGS}" )
 fi
@@ -52,6 +54,7 @@ fi
 # directory is mirrored on guest
 cd /vagrant/provisioning
 # fix permissions on ansible logging dir
+mkdir -p log
 sudo find log -type d -exec chmod 777 {} \;
 
 cp "${INVENTORY_FILE}" /tmp

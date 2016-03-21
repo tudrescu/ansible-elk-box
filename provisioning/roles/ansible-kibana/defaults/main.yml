@@ -30,15 +30,17 @@ kibana_log: "{{ kibana_log_dir }}/kibana.log"   # Kibana log path
 
 # Repositories
 # https://download.elastic.co/kibana/kibana/kibana-4.1.2-linux-x64.tar.gz
+
 kibana_download_url: "https://download.elastic.co/kibana/kibana"
+plugins_download_url: "https://download.elastic.co"
 
 # kibana_apt_repo: "deb http://packages.elasticsearch.org/kibana/{{ kibana_version }}/debian stable main"
 # kibana_repo_key: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
 
 kibana_plugins:
-  - { short: 'marvel', name: 'elasticsearch/marvel/latest' }
-  - { short: 'sense', name: 'elastic/sense' }
-  - { short: 'timelion', name: 'kibana/timelion'}
+  - { short: 'marvel', name: 'elasticsearch/marvel/latest', path: 'elasticsearch/marvel', version: 'latest' }
+  - { short: 'sense', name: 'elastic/sense', path: 'elastic/sense', version: 'latest' }
+  - { short: 'timelion', name: 'kibana/timelion', path: 'kibana/timelion', version: 'latest' }
 
 # Service Parameters
 kibana_service_startonboot: yes

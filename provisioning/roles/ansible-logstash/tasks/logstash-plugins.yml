@@ -16,16 +16,4 @@
   with_items: "{{ logstash_plugins }}"
   ignore_errors: yes
   environment: "{{ proxy_env }}"
-  # when: java_useproxy == 'false'
 
-# - name: Installing Plugins by Name with proxy
-#   action: >
-#     shell bin/plugin install "{{ item.name }}"
-#     chdir="{{ logstash_home_dir }}"
-#   with_items: "{{ logstash_plugins }}"
-#   ignore_errors: yes
-#   environment:
-#     http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#     https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#     no_proxy: "{{ java_no_proxy_host }}"
-#   when: java_useproxy == 'true'

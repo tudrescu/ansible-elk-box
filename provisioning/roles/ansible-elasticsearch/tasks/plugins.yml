@@ -38,7 +38,7 @@
   action: >
       shell bin/plugin install {{ item.name }}
       chdir={{ elasticsearch_home_dir }}
-  when: item.url is not defined and (java_useproxy == "false")
+  when: item.url is not defined and (java_useproxy == 'false' or not java_useproxy)
   with_items: "{{ elasticsearch_plugins }}"
   ignore_errors: yes
 
@@ -46,7 +46,7 @@
   action: >
       shell bin/plugin -DproxyPort={{ java_proxy_port }} -DproxyHost={{ java_proxy_host }} install {{ item.name }}
       chdir={{ elasticsearch_home_dir }}
-  when: item.url is not defined and (java_useproxy == "true")
+  when: item.url is not defined and (java_useproxy == 'true' or java_useproxy)
   with_items: "{{ elasticsearch_plugins }}"
   ignore_errors: yes
 

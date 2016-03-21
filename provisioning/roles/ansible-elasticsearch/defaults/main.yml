@@ -45,7 +45,7 @@ elasticsearch_repo_dir:
 #  - { dir: "/vagrant/esbackup" }                                              # trouble with normal hosts
 
 
-# plugins are broken!
+
 elasticsearch_plugins:
   - { short: 'kopf', name: 'lmenezes/elasticsearch-kopf' }
   - { short: 'license', name: 'license' }

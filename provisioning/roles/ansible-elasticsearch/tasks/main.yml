@@ -14,15 +14,6 @@
   environment: "{{ proxy_env }}"
   tags: install-es
 
-# - name: Add Elasticsearch APT Key with proxy
-#   apt_key: url="{{ elasticsearch_repo_key }}" state=present validate_certs={{ validate_apt_certificates }}
-#   environment:
-#      http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#      https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#      no_proxy: "{{ java_no_proxy_host }}"
-#   when: java_useproxy == "true"
-#   tags: install-es
-
 - name: Add Elasticsearch Debian repository
   shell: echo "{{ elasticsearch_debian_repo }}" | sudo tee "{{ elasticsearch_apt_source_list }}"
   tags: install-es

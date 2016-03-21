@@ -3,15 +3,19 @@ vm_cpus: "2"
 vm_memory: "6144"
 vm_base_box: "ubuntu/trusty64"
 
-vbguest_auto_update: true
+vbguest_auto_update: true                # update the Virtual Guest additions
 
 # Variables to pass to bootstrap script
-use_proxy: false
+use_proxy: true
 
-config_proxy_http: "http://proxy.example.de:800"
-config_proxy_https: "http://proxy.example.de:800"
-config_no_proxy: "localhost,127.0.0.1,.example.de"
+# Defaults to ENV['http_proxy'], ENV['https_proxy'], ENV['no_proxy'] if not explicitly specified
 
-ansible_tags: "common,java,elasticsearch,kibana,logstash"       # ELK stack
+# config_proxy_http: "http://proxy.example.de:800"
+# config_proxy_https: "http://proxy.example.de:800"
+# config_no_proxy: "localhost,127.0.0.1,.example.de"
+
+ansible_tags: "jenkins"       # ELK stack
+
+# ansible_tags: "common,java,elasticsearch,kibana,logstash"       # ELK stack
 # ansible_tags: "apache2,mapproxy"                              # Apache2 + Mapproxy
 # ansible_tags: "jenkins"                                       # jenkins

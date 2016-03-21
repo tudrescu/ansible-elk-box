@@ -1,10 +1,10 @@
 ---
 
-# used in config.py template, overriden by group parameters
-java_useproxy: "false"
-
-java_proxy_port: 800
-java_proxy_host: proxy.example.de
+# used in config.py template, overwritten by group parameters
+#java_useproxy: "false"
+#
+#java_proxy_port: 800
+#java_proxy_host: proxy.example.de
 
 # use apache2 data user
 mapproxy_user: www-data

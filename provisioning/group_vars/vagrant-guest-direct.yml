@@ -2,4 +2,7 @@
 
 java_useproxy: "false"
 
+java_proxy_port:
+java_proxy_host:
+
 proxy_env:

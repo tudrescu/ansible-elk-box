@@ -2,6 +2,8 @@
 # vi: set ft=ruby :
 
 require "yaml"
+require "json"
+require "uri"
 
 # load custom user preferences
 prefs = YAML::load_file("Vagrantparams.yaml")
@@ -36,6 +38,8 @@ puts "Assigned/Prefs/Available VM Memory : " + vm_memory.to_s + "/" + prefs['vm_
 puts "-----------" * 5
 
 
+extra_vars_hash = {:java_useproxy => use_proxy}
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 Vagrant.configure(2) do |config|
 
@@ -49,11 +53,23 @@ Vagrant.configure(2) do |config|
 
   # configure proxyies for Vagrant, can be side stepped with java_useproxy: false in Vagrantparams.yml
   if (use_proxy && Vagrant.has_plugin?("vagrant-proxyconf"))
+
     config.proxy.http      = (prefs.has_key?('config_proxy_http') ? prefs['config_proxy_http'] : ENV['http_proxy'])
     config.proxy.https     = (prefs.has_key?('config_proxy_https') ? prefs['config_proxy_https'] : ENV['https_proxy'])
     config.proxy.no_proxy  = (prefs.has_key?('config_no_proxy') ? prefs['config_no_proxy'] : ENV['no_proxy'])
 
-    puts "Using proxy: " + config.proxy.http.to_s + ", exclusions: " + config.proxy.no_proxy.to_s
+    http_proxy_url = URI.parse(config.proxy.http)
+
+    # build ansible --extra-vars
+    extra_vars_hash = {:java_useproxy => use_proxy,
+                       :proxy_env => {:http_proxy => config.proxy.http,
+                                      :https_proxy => config.proxy.https,
+                                      :no_proxy => config.proxy.no_proxy},
+                       :java_proxy_host => http_proxy_url.host.to_s,
+                       :java_proxy_port => http_proxy_url.port.to_s,
+                       :java_no_proxy_host => config.proxy.no_proxy}
+
+
 
   end
 
@@ -72,9 +88,12 @@ Vagrant.configure(2) do |config|
       vb.customize ["modifyvm", :id, "--cpus", vm_cpus, "--memory", vm_memory]
   end
 
+  ansible_extra_vars = JSON.generate(extra_vars_hash).to_s
+  puts "Proxy settings : " + ansible_extra_vars.to_s
+
   config.vm.provision :shell,
      :keep_color => true,
      :path => "bootstrap.sh",
-     :args => "-p #{use_proxy} -t #{ansible_tags}"
+     :args => "-p #{use_proxy} -t #{ansible_tags} -e '#{ansible_extra_vars}'"
 
 end
