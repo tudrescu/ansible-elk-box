@@ -69,6 +69,8 @@ and install the vagrant-proxyconf plugin
 vagrant plugin install vagrant-proxyconf
 ```
 
+Also set the variable 'use_proxy: true' in Vagrantparams.yml
+
 
 ### Installation
 
@@ -79,10 +81,13 @@ cd ~/ansible-elk-box
 ```
 
 Configure environment & start provisioning
-
-Edit Vagrantparams.yaml to change defaults and then run
 ```bash
 cd ~/ansible-elk-box
+vagrant up
+```
+
+To change defaults, or use a proxy, edit Vagrantparams.yaml before running
+```bash
 vagrant up
 ```
 

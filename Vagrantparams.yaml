@@ -6,7 +6,7 @@ vm_base_box: "ubuntu/trusty64"
 vbguest_auto_update: true                # update the Virtual Guest additions
 
 # Variables to pass to bootstrap script
-use_proxy: true
+use_proxy: false
 
 # Defaults to ENV['http_proxy'], ENV['https_proxy'], ENV['no_proxy'] if not explicitly specified
 
