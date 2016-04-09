@@ -4,19 +4,8 @@
   action: >
       shell mapproxy-seed -f {{ mapproxy_service.config }} -s {{ mapproxy_seed.config }}
       chdir={{ mapproxy_home_dir }}
-  # when: seed_cache == 'true' and java_useproxy == 'false'
   when: seed_cache == 'true'
   environment: "{{ proxy_env }}"
-
-# - name: Seed MapProxy Cache with proxy
-#   action: >
-#       shell mapproxy-seed -f {{ mapproxy_service.config }} -s {{ mapproxy_seed.config }}
-#       chdir={{ mapproxy_home_dir }}
-#   environment:
-#      http_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#      https_proxy: "http://{{ java_proxy_host }}:{{ java_proxy_port }}"
-#      no_proxy: "{{ java_no_proxy_host }}"
-#   when: seed_cache == 'true' and java_useproxy == 'true'
 
 
 # Fix file permissions
