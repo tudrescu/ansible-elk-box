@@ -93,15 +93,18 @@ vagrant up
 
 Supported variables in Vagrantparams.yaml.
 
-    vm_cpus: 2                          # number of CPUs reserved for the VM, 2 is minimum
-    vm_memory: 6144                     # RAM, 4GB is the minimum required
-    vm_base_box: "ubunt/trusty64"       # Hashicorp stock Ubuntu 14.04
+    vm_cpus: 2                                  # number of CPUs reserved for the VM, 2 is minimum
+    vm_memory: 6144                             # memory, 4GB is the minimum recommended
+    vm_base_box: "ubuntu/trusty64"              # Hashicorp stock Ubuntu 14.04
 
-    vbguest_auto_update: true           # update the Virtual Guest Box Additions automatically. Disable after provisioning
+    vbguest_auto_update: true                   # update the Virtual Guest Box Additions automatically. 
+                                                # Bug: Sometimes the version is incorectly reported causing 
+                                                # an upgrade each time the VM is powered up. 
+                                                # Disable auto update after provisioning if that is the case.
+          
+    use_proxy: false                            # when the VM host is behind a proxy
 
-    use_proxy: true                     # when the VM host is behind a proxy
-
-    ansible_tags:                       # select modules
+    ansible_tags: common, java, elasticsearch   # select modules
 
 Available ansible_tags
 
