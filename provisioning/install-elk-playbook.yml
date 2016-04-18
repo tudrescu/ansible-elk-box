@@ -21,7 +21,7 @@
     - ansible-java
 
 ##########################
-#  Elasticsearch install #
+# Elasticsearch install  #
 ##########################
 - hosts: all
   become: true
@@ -31,7 +31,7 @@
     - ansible-elasticsearch
 
 ##########################
-## Kibana install        #
+# Kibana install         #
 ##########################
 - hosts: all
   become: true
@@ -41,7 +41,7 @@
     - ansible-kibana
 
 ##########################
-## Logstash install      #
+# Logstash install       #
 ##########################
 - hosts: all
   become: true
@@ -51,7 +51,7 @@
     - ansible-logstash
 
 ##########################
-## Apache2 install       #
+# Apache2 install        #
 ##########################
 - hosts: all
   become: true
@@ -60,9 +60,9 @@
   roles:
     - ansible-apache2
 
-#########################
-# Mapproxy install      #
-#########################
+##########################
+# Mapproxy install       #
+##########################
 - hosts: all
   become: true
   become_method: 'sudo'
@@ -71,7 +71,7 @@
     - ansible-mapproxy
 
 ##########################
-## Jenkins install       #
+#  Jenkins install       #
 ##########################
 - hosts: all
   become: true
@@ -81,7 +81,7 @@
     - ansible-jenkins
 
 ##########################
-## MySQL install         #
+#  MySQL install         #
 ##########################
 - hosts: all
   become: true
@@ -91,6 +91,6 @@
     - ansible-mysql
 
 
-# ##########################
-# ## Dashboards            #
-# ##########################
+# ########################
+#    Dashboards          #
+# ########################
