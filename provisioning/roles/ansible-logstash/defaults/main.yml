@@ -1,7 +1,7 @@
 ---
 # defaults file for the ansible-logstash role
 
-logstash_version: "2.2"
+logstash_version: "2.3"
 
 logstash_apt_repo: "deb http://packages.elastic.co/logstash/{{ logstash_version }}/debian stable main"
 logstash_apt_source_list: "/etc/apt/sources.list.d/logstash-{{ logstash_version }}.list"

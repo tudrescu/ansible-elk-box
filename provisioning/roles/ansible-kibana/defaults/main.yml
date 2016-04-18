@@ -6,7 +6,7 @@ kibana_force_install: "true"
 kibana_group: kibana
 kibana_user: kibana
 
-kibana_version: "4.4.2"                         # version to install
+kibana_version: "4.5.0"                         # version to install
 kibana_os: "linux"                              # Kibana operating system build
 kibana_arch: "x64"                              # Kibana architecture build
 
@@ -24,12 +24,12 @@ kibana_default_app_id: "discover"               # Default App to Load
 kibana_log_dir: /var/log/kibana
 kibana_log: "{{ kibana_log_dir }}/kibana.log"   # Kibana log path
 
-# # TODO implement with logrotate?
+# # TODO implement logrotate?
 # kibana_log_rotate_count: 5                      # Log rotation count
 # kibana_log_rotate_interval: daily               # Log rotation interval
 
 # Repositories
-# https://download.elastic.co/kibana/kibana/kibana-4.1.2-linux-x64.tar.gz
+# https://download.elastic.co/kibana/kibana/kibana-4.5.0-linux-x64.tar.gz
 
 kibana_download_url: "https://download.elastic.co/kibana/kibana"
 plugins_download_url: "https://download.elastic.co"

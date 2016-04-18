@@ -4,31 +4,31 @@
   when: java_useproxy == 'true' or java_useproxy
 
 - name: add proxy settings configuration for Jenkins
-  shell: cat {{ jenkins_dest }}/proxy.groovy | java -jar {{ jenkins_var.cli_dest }} -s http://localhost:{{ jenkins_port }} groovy =
+  shell: cat {{ jenkins_dest }}/proxy.groovy | java -jar {{ jenkins_var.cli_dest }} -s http://{{ jenkins_host }}:{{ jenkins_port }} groovy =
   when: java_useproxy == 'true' or java_useproxy
 
 - name: List Jenkins plugins
-  shell: java -jar {{ jenkins_var.cli_dest }} -s http://localhost:{{ jenkins_port }} list-plugins | cut -f 1 -d ' '
+  shell: java -jar {{ jenkins_var.cli_dest }} -s http://{{ jenkins_host }}:{{ jenkins_port }} list-plugins | cut -f 1 -d ' '
   when: jenkins_plugins is defined
   register: jenkins_plugins_installed
 
 - name: Install/Update Jenkins plugins
-  shell: java -jar {{ jenkins_var.cli_dest }} -s http://localhost:{{ jenkins_port }} install-plugin {{ item }}
+  shell: java -jar {{ jenkins_var.cli_dest }} -s http://{{ jenkins_host }}:{{ jenkins_port }} install-plugin {{ item }}
   when: jenkins_plugins_installed.changed and jenkins_plugins_installed.stdout.find('{{ item }}') == -1
   with_items: "{{ jenkins_plugins }}"
   notify:
     - 'Restart Jenkins'
 
 - name: "{{ jenkins_startup_delay_s | default(45) }}s delay while starting Jenkins"
-  wait_for: host=localhost port={{ jenkins_port }} delay={{ jenkins_startup_delay_s | default(45) }}
+  wait_for: host={{ jenkins_host }} port={{ jenkins_port }} delay={{ jenkins_startup_delay_s | default(45) }}
 
 # Update standard plugins
 - name: List plugins Jenkins to be updated
-  shell: java -jar {{ jenkins_var.cli_dest }} -s http://localhost:{{ jenkins_port }} list-plugins | grep ')$' | cut -f 1 -d ' ' | sed ':a;N;$!ba;s/\n/ /g'
+  shell: java -jar {{ jenkins_var.cli_dest }} -s http://{{ jenkins_host }}:{{ jenkins_port }} list-plugins | grep ')$' | cut -f 1 -d ' ' | sed ':a;N;$!ba;s/\n/ /g'
   register: jenkins_plugins_updates
 
 - name: Update Jenkins plugins
-  shell: java -jar {{ jenkins_var.cli_dest }} -s http://localhost:{{ jenkins_port }} install-plugin {{ item }}
+  shell: java -jar {{ jenkins_var.cli_dest }} -s http://{{ jenkins_host }}:{{ jenkins_port }} install-plugin {{ item }}
   with_items: "{{ jenkins_plugins_updates.stdout.split() }}"
   when: jenkins_plugins_updates.stdout != ''
   ignore_errors: yes
@@ -36,4 +36,4 @@
      - 'Restart Jenkins'
 
 - name: "{{ jenkins_startup_delay_s | default(45) }}s delay while starting Jenkins"
-  wait_for: host=localhost port={{ jenkins_port }} delay={{ jenkins_startup_delay_s | default(45) }}
+  wait_for: host={{ jenkins_host }} port={{ jenkins_port }} delay={{ jenkins_startup_delay_s | default(45) }}

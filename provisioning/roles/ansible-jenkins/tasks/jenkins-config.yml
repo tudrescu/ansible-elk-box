@@ -8,6 +8,15 @@
   service: name=jenkins state=restarted
   when: config_changed.changed
 
+# Fix permissions on directories
+- name: Fix Permissions on var directories
+  file: >
+    path={{ jenkins_lib }}
+    state=directory
+    owner={{ jenkins_user }}
+    group={{ jenkins_group }}
+    recurse=yes
+
 # - name: Configure Jenkins Prefix
 #   when: prefix is defined
 #   lineinfile: dest=/etc/default/jenkins regexp=^PREFIX= line=PREFIX={{ jenkins_prefix }}

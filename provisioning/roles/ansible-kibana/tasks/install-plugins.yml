@@ -34,3 +34,13 @@
   with_items: "{{ kibana_plugins }}"
   ignore_errors: yes
   when: java_useproxy == 'true' or java_useproxy
+
+
+# Fix Permissions on Kibana Home
+- name: Fix permissions Kibana Home
+  file: >
+    path={{ kibana_dir }}
+    state=directory
+    owner={{ kibana_user }}
+    group={{ kibana_group }}
+    recurse=yes

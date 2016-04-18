@@ -3,6 +3,7 @@
 
 jenkins_startup_delay_s: 30                  # Wait delay for Jenkins to start up, default 10
 
+jenkins_host: "localhost"
 jenkins_port: 8080
 
 jenkins_user: 'jenkins'                       # we have to deactivate LADP jenkins user in /etc/sssd/sssd.conf!
