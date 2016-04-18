@@ -25,6 +25,15 @@
     mode: 0755
     state: directory
 
+# Fix permissions on directories
+- name: Fix Permissions
+  file:
+    path: {{ jenkins_lib }}
+    state: directory
+    owner: {{ jenkins_user }}
+    group: {{ jenkins_group }}
+    recurse: yes
+
 - name: Update Jenkins plugin data
   shell: >
     curl -L '{{ jenkins_updates_list }}' | sed '1d;$d' > /var/lib/jenkins/updates/default.json
@@ -34,7 +43,7 @@
 
 
 - name: Permissions for default.json updates info.
-  file: 
+  file:
     path: "/var/lib/jenkins/updates/default.json"
     owner: '{{ jenkins_user }}'
     group: '{{ jenkins_group }}'
