@@ -8,11 +8,20 @@
 - name: Save proxy configuration
   template: >
       src="proxy.xml.j2"
-      dest="{{ jenkins_lib }}/proxy.xml.test"
+      dest="{{ jenkins_lib }}/proxy.xml"
       owner="{{ jenkins_user }}"
       group="{{ jenkins_group }}"
       mode=0644
-  when: when: java_useproxy == "true" or java_useproxy
+  when: java_useproxy == "true" or java_useproxy
+
+# Fix permissions on directories
+- name: Fix Permissions on var directories
+  file: >
+    path="{{ jenkins_lib }}"
+    state=directory
+    owner="{{ jenkins_user }}"
+    group="{{ jenkins_group }}"
+    recurse=yes
 
 - name: Restart Jenkins now
   service: name=jenkins state=restarted
@@ -30,12 +39,3 @@
 #       owner="{{ jenkins_user }}"
 #       group="{{ jenkins_group }}"
 #       mode=0644
-
-# Fix permissions on directories
-- name: Fix Permissions on var directories
-  file: >
-    path="{{ jenkins_lib }}"
-    state=directory
-    owner="{{ jenkins_user }}"
-    group="{{ jenkins_group }}"
-    recurse=yes

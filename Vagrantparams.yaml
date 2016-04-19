@@ -3,18 +3,26 @@ vm_cpus: "2"
 vm_memory: "6144"
 vm_base_box: "ubuntu/trusty64"
 
-vbguest_auto_update: true                # update the Virtual Guest additions
+vbguest_auto_update: true         # update Virtual Guest additions automatically
+
+# vm_synced_folders:
+#     - { "host": "rawdata", "guest": "/vagrant/rawdata" }
 
 # Variables to pass to bootstrap script
 use_proxy: false
 
 # Defaults to ENV['http_proxy'], ENV['https_proxy'], ENV['no_proxy'] if not explicitly specified
-
+#
 # config_proxy_http: "http://proxy.example.de:800"
 # config_proxy_https: "http://proxy.example.de:800"
 # config_no_proxy: "localhost,127.0.0.1,.example.de"
 
-
-ansible_tags: "common,java,elasticsearch,kibana,logstash"       # ELK stack
-# ansible_tags: "apache2,mapproxy"                              # Apache2 + Mapproxy
-# ansible_tags: "jenkins"                                       # jenkins
+ansible_tags:
+    - common                                 # common dependencies
+    - java                                   # Oracle JDK
+    - elasticsearch                          # ELK
+    - kibana                                 #
+    - logstash                               #
+    # - apache2                                # webserver
+    # - mapproxy                               # WMS server
+    # - jenkins                                # CI/CD tool

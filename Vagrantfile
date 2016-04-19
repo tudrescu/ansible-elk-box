@@ -10,9 +10,9 @@ prefs = YAML::load_file("Vagrantparams.yaml")
 
 use_proxy = (prefs.has_key?('use_proxy') ? prefs['use_proxy'] : false)
 
-ansible_tags = (prefs.has_key?('ansible_tags') ? prefs['ansible_tags'] : "")
-
 vm_base_box = (prefs.has_key?('vm_base_box') ? prefs['vm_base_box'] : "ubuntu/trusty64")
+
+ansible_tags = (prefs.has_key?('ansible_tags') ? prefs['ansible_tags'].join(",") : "common")
 
 
 # Use only half of the available CPU/Memory resources if preferences exceed this threshold
@@ -68,8 +68,6 @@ Vagrant.configure(2) do |config|
                        :java_proxy_host => http_proxy_url.host.to_s,
                        :java_proxy_port => http_proxy_url.port.to_s,
                        :java_no_proxy_host => config.proxy.no_proxy}
-
-
 
   end
 
