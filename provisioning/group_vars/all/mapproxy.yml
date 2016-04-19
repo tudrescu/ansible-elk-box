@@ -1,2 +1,3 @@
 ---
 # Ansible variables for MapProxy
+# overrides defaults in ansible-mapproxy role

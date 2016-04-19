@@ -4,18 +4,19 @@
   lineinfile: dest="/etc/default/jenkins" regexp="^HTTP_PORT=" line="HTTP_PORT={{ jenkins_port }}"
   register: config_changed
 
+# apply proxy configuration
+- name: Save proxy configuration
+  template: >
+      src="proxy.xml.j2"
+      dest="{{ jenkins_lib }}/proxy.xml.test"
+      owner="{{ jenkins_user }}"
+      group="{{ jenkins_group }}"
+      mode=0644
+  when: when: java_useproxy == "true" or java_useproxy
+
 - name: Restart Jenkins now
   service: name=jenkins state=restarted
   when: config_changed.changed
-
-# Fix permissions on directories
-- name: Fix Permissions on var directories
-  file: >
-    path={{ jenkins_lib }}
-    state=directory
-    owner={{ jenkins_user }}
-    group={{ jenkins_group }}
-    recurse=yes
 
 # - name: Configure Jenkins Prefix
 #   when: prefix is defined
@@ -23,4 +24,18 @@
 #
 # - name: Configure Jenkins E-mail
 #   when: jenkins_email is defined
-#   templates: src=hudson.tasks.Mailer.xml.j2 dest={{ jenkins_lib }}/hudson.tasks.Mailer.xml owner=jenkins group=jenkins mode=0644
+#   templates: >
+#       src=hudson.tasks.Mailer.xml.j2
+#       dest="{{ jenkins_lib }}/hudson.tasks.Mailer.xml"
+#       owner="{{ jenkins_user }}"
+#       group="{{ jenkins_group }}"
+#       mode=0644
+
+# Fix permissions on directories
+- name: Fix Permissions on var directories
+  file: >
+    path="{{ jenkins_lib }}"
+    state=directory
+    owner="{{ jenkins_user }}"
+    group="{{ jenkins_group }}"
+    recurse=yes

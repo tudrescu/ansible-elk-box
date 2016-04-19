@@ -1,7 +1,7 @@
 ---
 # Jenkins Ansible Variables
 
-jenkins_startup_delay_s: 30                  # Wait delay for Jenkins to start up, default 10
+jenkins_startup_delay_s: 30                  # Wait delay for Jenkins to start up, default 30
 
 jenkins_host: "localhost"
 jenkins_port: 8080
@@ -30,9 +30,10 @@ jenkins_plugins:
   - 'parameterized-trigger'
   - 'build-with-parameters'
   - 'build-pipeline-plugin'
+  - 'pipeline-stage-view'
+  - 'simple-build-for-pipeline'
   - 'build-flow-plugin'
   - 'delivery-pipeline-plugin'
-  - 'buildgraph-view'
   - 'matrix-project'
   - 'show-build-parameters'
   - 'envinject'

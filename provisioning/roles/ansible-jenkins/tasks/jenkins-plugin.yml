@@ -1,11 +1,11 @@
 ---
 
 - template: src=proxy.groovy dest={{ jenkins_dest }}/proxy.groovy
-  when: java_useproxy == 'true' or java_useproxy
+  when: java_useproxy == "true" or java_useproxy
 
 - name: add proxy settings configuration for Jenkins
   shell: cat {{ jenkins_dest }}/proxy.groovy | java -jar {{ jenkins_var.cli_dest }} -s http://{{ jenkins_host }}:{{ jenkins_port }} groovy =
-  when: java_useproxy == 'true' or java_useproxy
+  when: java_useproxy == "true" or java_useproxy
 
 - name: List Jenkins plugins
   shell: java -jar {{ jenkins_var.cli_dest }} -s http://{{ jenkins_host }}:{{ jenkins_port }} list-plugins | cut -f 1 -d ' '

@@ -1,11 +1,14 @@
 {
   "template" : "logstash-*",
   "settings" : {
-    "index.refresh_interval" : "5s"
+    "index.refresh_interval" : "10s"
   },
   "mappings" : {
     "_default_" : {
-       "_all" : {"enabled" : true, "omit_norms" : true},
+       "_all" : {
+          "enabled" : true,
+          "omit_norms" : true
+       },
        "dynamic_templates" : [ {
          "message_field" : {
            "match" : "message",

@@ -1,4 +1,5 @@
 ---
 # Ansible variables for MySQL
+# overrides defaults in ansible-mysql role
 
 mysql_root_password: "vagrant"

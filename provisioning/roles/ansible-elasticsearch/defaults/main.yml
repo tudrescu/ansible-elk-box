@@ -1,7 +1,7 @@
 ---
 # Elasticsearch Ansible Variables
 
-# depends on ansible-common-dependencies role
+# depends on ansible-common-dependencies, ansible-java roles
 
 elasticsearch_heap_size: 2g
 
@@ -42,10 +42,8 @@ elasticsearch_templates_dir: "{{ elasticsearch_conf_dir }}/templates"          #
 # path to snapshot restore location
 elasticsearch_repo_dir:
   - { dir: "/tmp/esbackup" }
-#  - { dir: "/vagrant/esbackup" }                                              # trouble with normal hosts
 
-
-
+# plugins
 elasticsearch_plugins:
   - { short: 'kopf', name: 'lmenezes/elasticsearch-kopf' }
   - { short: 'license', name: 'license' }
@@ -63,6 +61,9 @@ elasticsearch_plugins:
 elasticsearch_service_startonboot: yes
 elasticsearch_service_state: started
 
+# Marvel Agent configuration
+marvel_agent_interval: 45s
+marvel_history_duration: 2
 
 # Special Elasticsearch options
 # elasticsearch_max_open_files: 65535

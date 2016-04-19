@@ -7,6 +7,8 @@
 
 # Fix permissions
 - file: >
-    path={{ elasticsearch_templates_dir }} state=directory
-    owner={{ elasticsearch_user }} group={{ elasticsearch_group }}
+    path="{{ elasticsearch_templates_dir }}"
+    state=directory
+    owner="{{ elasticsearch_user }}"
+    group="{{ elasticsearch_group }}"
     recurse=yes

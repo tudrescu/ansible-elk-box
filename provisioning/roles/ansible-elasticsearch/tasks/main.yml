@@ -1,58 +1,23 @@
 ---
 # Elasticsearch Ansible Tasks
 
-# Configure user and group
-- name: Configuring user and group
-  group: name={{ elasticsearch_group }}
-  tags: install-es
+- include: install-elasticsearch.yml
+  notify: Restart Elasticsearch
+  tags:
+    - install-es
 
-- user: name={{ elasticsearch_user }} group={{ elasticsearch_group }} createhome=no
-  tags: install-es
-
-- name: Add Elasticsearch APT Key
-  apt_key: url="{{ elasticsearch_repo_key }}" state=present validate_certs={{ validate_apt_certificates }}
-  environment: "{{ proxy_env }}"
-  tags: install-es
-
-- name: Add Elasticsearch Debian repository
-  shell: echo "{{ elasticsearch_debian_repo }}" | sudo tee "{{ elasticsearch_apt_source_list }}"
-  tags: install-es
-
-- name: Install Elasticsearch
-  apt: name=elasticsearch update_cache=yes state=latest
-  environment: "{{ proxy_env }}"
-  tags: install-es
-
-- file: path={{ elasticsearch_templates_dir }} state=directory owner=root group={{ elasticsearch_group }} recurse=yes
-  when: (elasticsearch_templates_dir is defined)
-  tags: install-es
-
-- file: path={{ elasticsearch_scripts_dir }} state=directory owner=root group={{ elasticsearch_group }} recurse=yes
-  when: (elasticsearch_scripts_dir is defined)
-  tags: install-es
-
-# Configure Elasticsearch Node
-- name: Configuring Elasticsearch Node
-  template: src=elasticsearch.yml.j2 dest={{ elasticsearch_conf_dir }}/elasticsearch.yml owner=root group={{ elasticsearch_group }} mode=0750
-  when: elasticsearch_conf_dir is defined
+- include: configure-elasticsearch.yml
+  notify: Restart Elasticsearch
   tags:
     - install-es
     - configure-es
-  notify: Restart Elasticsearch
 
-- template: src=elasticsearch.default.j2 dest=/etc/default/elasticsearch owner=root group=root mode=0644
-  tags:
-    - install-es
-    - configure-es
-  notify: Restart Elasticsearch
-
-# Install Other Generic Plugins
-- include: plugins.yml
+# Install Plugins
+- include: install-plugins.yml
   when: (elasticsearch_plugins is defined)
   tags:
     - install-es
-    - configure-es
-    - configure-es-plugins
+    - install-es-plugins
 
 # # Install Custom Templates
 # - include: custom-templates.yml

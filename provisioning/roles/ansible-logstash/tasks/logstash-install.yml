@@ -9,7 +9,6 @@
 
 - name: Add Logstash Debian repository
   shell: echo "{{ logstash_apt_repo }}" | sudo tee "{{ logstash_apt_source_list }}"
-  # always_run: True
 
 - name: Install Logstash
   apt: >
@@ -32,7 +31,8 @@
 # Configure index templates directory
 - name: Configuring directories
   file: >
-    path={{ logstash_index_templates_dir }} state=directory
+    path="{{ logstash_index_templates_dir }}"
+    state=directory
     owner=root
     group=root
     recurse=yes

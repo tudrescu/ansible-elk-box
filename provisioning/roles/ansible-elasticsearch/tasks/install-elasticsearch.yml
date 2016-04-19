@@ -1,0 +1,42 @@
+---
+
+# Configure user and group
+- name: Configuring user and group
+  group: name={{ elasticsearch_group }}
+
+
+# Add repo and install Elasticsearch
+- user: name={{ elasticsearch_user }} group={{ elasticsearch_group }} createhome=no
+
+
+- name: Add Elasticsearch APT Key
+  apt_key: url="{{ elasticsearch_repo_key }}" state=present validate_certs={{ validate_apt_certificates }}
+  environment: "{{ proxy_env }}"
+
+
+- name: Add Elasticsearch Debian repository
+  shell: echo "{{ elasticsearch_debian_repo }}" | sudo tee "{{ elasticsearch_apt_source_list }}"
+
+
+- name: Install Elasticsearch
+  apt: name=elasticsearch update_cache=yes state=latest
+  environment: "{{ proxy_env }}"
+
+
+# Add directories for templates and scripts
+- file: >
+      path="{{ elasticsearch_templates_dir }}"
+      state=directory
+      owner=root
+      group={{ elasticsearch_group }}
+      recurse=yes
+  when: (elasticsearch_templates_dir is defined)
+
+
+- file: >
+      path="{{ elasticsearch_scripts_dir }}"
+      state=directory
+      owner=root
+      group="{{ elasticsearch_group }}"
+      recurse=yes
+  when: (elasticsearch_scripts_dir is defined)

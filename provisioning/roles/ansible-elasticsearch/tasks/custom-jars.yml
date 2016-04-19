@@ -18,6 +18,8 @@
 
 # Fix permissions
 - file: >
-    path="{{ elasticsearch_home_dir }}/lib" state=directory
-    owner={{ elasticsearch_user }} group={{ elasticsearch_group }}
+    path="{{ elasticsearch_home_dir }}/lib"
+    state=directory
+    owner="{{ elasticsearch_user }}"
+    group="{{ elasticsearch_group }}"
     recurse=yes

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+{% noproxylist = {{ java_no_proxy_host }}.split(',') %}
+
+<proxy>
+  <name>"{{ java_proxy_host }}"</name>
+  <port>{{ java_proxy_port }}</port>
+  <noProxyHost>{% for it in noproxylist %}{{ it }}{% endfor %}</noProxyHost>
+  <secretPassword></secretPassword>
+  <testUrl>http://www.google.de</testUrl>
+</proxy>

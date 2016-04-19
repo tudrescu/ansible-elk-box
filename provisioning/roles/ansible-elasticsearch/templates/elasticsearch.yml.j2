@@ -252,3 +252,16 @@ shield.authc.realms:
 
 
 {% endif %}
+
+
+# -------------------------------- Marvel Agent --------------------------------
+
+# marvel.agent.interval: 45s
+{% if marvel_agent_interval is defined %}
+marvel.agent.interval: {{ marvel_agent_interval }}
+{% endif %}
+
+# marvel.history.duration: 7
+{% if marvel_history_duration is defined %}
+marvel.history.duration: {{ marvel_history_duration }}
+{% endif %}
