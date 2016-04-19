@@ -14,7 +14,7 @@
   with_items: "{{ kibana_community_plugins }}"
   ignore_errors: yes
   environment: "{{ proxy_env }}"
-  when: java_useproxy == 'false' or not java_useproxy
+  when: java_useproxy == "false" or not java_useproxy
 
 # Download Plugins if behind proxy. kibana plugin command does not support proxies
 - name: Download community plugins
@@ -25,7 +25,7 @@
   with_items: "{{ kibana_community_plugins }}"
   ignore_errors: yes
   environment: "{{ proxy_env }}"
-  # when: java_useproxy == 'true' or java_useproxy
+  when: java_useproxy == "true" or java_useproxy
 
 - name: Installing community plugins by URL when using proxy
   action: >
@@ -33,13 +33,13 @@
       chdir={{ kibana_dir }}
   with_items: "{{ kibana_community_plugins }}"
   ignore_errors: yes
-  when: java_useproxy == 'true' or java_useproxy
+  when: java_useproxy == "true" or java_useproxy
 
 - name: Cleanup downloaded plugins
   file: name=//tmp/{{ item.short }}.zip state=absent
   with_items: "{{ kibana_community_plugins }}"
   ignore_errors: yes
-  when: java_useproxy == 'true' or java_useproxy
+  when: java_useproxy == "true" or java_useproxy
 
 # Fix Permissions on Kibana Home
 - name: Fix permissions Kibana Home
