@@ -28,10 +28,10 @@
 # Fix permissions on directories
 - name: Fix Permissions
   file:
-    path: {{ jenkins_lib }}
+    path: "{{ jenkins_lib }}"
     state: directory
-    owner: {{ jenkins_user }}
-    group: {{ jenkins_group }}
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
     recurse: yes
 
 - name: Update Jenkins plugin data

@@ -1,3 +1,5 @@
+---
+
 - name: Removing Plugins if they exist
   action: >
       shell bin/kibana plugin --remove {{ item.short }}
@@ -5,18 +7,17 @@
   with_items: "{{ kibana_plugins }}"
   ignore_errors: yes
 
-- name: Installing Plugins by Name
+- name: Installing official Plugins by Name
   action: >
       shell bin/kibana plugin --install {{ item.name }}
       chdir={{ kibana_dir }}
   with_items: "{{ kibana_plugins }}"
   ignore_errors: yes
   environment: "{{ proxy_env }}"
-  when: java_useproxy == 'false' or not java_useproxy
+  when: java_useproxy == "false" or not java_useproxy
 
-
-# Download Plugins if behind proxy
-- name: Download Plugins
+# Download Official Plugins if behind proxy. kibana plugin command does not support proxies
+- name: Download official Plugins
   get_url: >
     url={{ plugins_download_url }}/{{ item.path }}/{{ item.short }}-{{ item.version }}.tar.gz
     dest=/tmp/{{ item.short }}-{{ item.version }}.tar.gz
@@ -24,23 +25,27 @@
   with_items: "{{ kibana_plugins }}"
   ignore_errors: yes
   environment: "{{ proxy_env }}"
-  when: java_useproxy == 'true' or java_useproxy
+  when: java_useproxy == "true" or java_useproxy
 
-
-- name: Installing Plugins by URL when using proxy
+- name: Installing official Plugins by URL when using proxy
   action: >
       shell bin/kibana plugin --install {{ item.short }} --url file:///tmp/{{ item.short }}-{{ item.version }}.tar.gz
       chdir={{ kibana_dir }}
   with_items: "{{ kibana_plugins }}"
   ignore_errors: yes
-  when: java_useproxy == 'true' or java_useproxy
+  when: java_useproxy == "true" or java_useproxy
 
+- name: Cleanup downloaded plugins
+  file: name=/tmp/{{ item.short }}-{{ item.version }}.tar.gz state=absent
+  with_items: "{{ kibana_plugins }}"
+  ignore_errors: yes
+  when: java_useproxy == "true" or java_useproxy
 
 # Fix Permissions on Kibana Home
 - name: Fix permissions Kibana Home
   file: >
-    path={{ kibana_dir }}
+    path="{{ kibana_dir }}"
     state=directory
-    owner={{ kibana_user }}
-    group={{ kibana_group }}
+    owner="{{ kibana_user }}"
+    group="{{ kibana_group }}"
     recurse=yes

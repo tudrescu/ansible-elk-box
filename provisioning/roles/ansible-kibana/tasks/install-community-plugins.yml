@@ -1,0 +1,51 @@
+---
+
+- name: Removing Plugins if they exist
+  action: >
+      shell bin/kibana plugin --remove {{ item.short }}
+      chdir={{ kibana_dir }}
+  with_items: "{{ kibana_community_plugins }}"
+  ignore_errors: yes
+
+- name: Install community plugins from arbitrary URLs
+  action: >
+      shell bin/kibana plugin --install {{ item.short }} --url {{ item.url }}
+      chdir={{ kibana_dir }}
+  with_items: "{{ kibana_community_plugins }}"
+  ignore_errors: yes
+  environment: "{{ proxy_env }}"
+  when: java_useproxy == 'false' or not java_useproxy
+
+# Download Plugins if behind proxy. kibana plugin command does not support proxies
+- name: Download community plugins
+  get_url: >
+    url={{ item.url }}
+    dest=/tmp/{{ item.short }}.zip
+    validate_certs={{ validate_apt_certificates }}
+  with_items: "{{ kibana_community_plugins }}"
+  ignore_errors: yes
+  environment: "{{ proxy_env }}"
+  # when: java_useproxy == 'true' or java_useproxy
+
+- name: Installing community plugins by URL when using proxy
+  action: >
+      shell bin/kibana plugin --install {{ item.short }} --url file:///tmp/{{ item.short }}.zip
+      chdir={{ kibana_dir }}
+  with_items: "{{ kibana_community_plugins }}"
+  ignore_errors: yes
+  when: java_useproxy == 'true' or java_useproxy
+
+- name: Cleanup downloaded plugins
+  file: name=//tmp/{{ item.short }}.zip state=absent
+  with_items: "{{ kibana_community_plugins }}"
+  ignore_errors: yes
+  when: java_useproxy == 'true' or java_useproxy
+
+# Fix Permissions on Kibana Home
+- name: Fix permissions Kibana Home
+  file: >
+    path="{{ kibana_dir }}"
+    state=directory
+    owner="{{ kibana_user }}"
+    group="{{ kibana_group }}"
+    recurse=yes

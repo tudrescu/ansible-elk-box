@@ -12,3 +12,11 @@
   tags:
     - install-kibana
     - install-kibana-plugins
+
+# deal with community plugins
+- include: install-community-plugins.yml
+  when: (kibana_community_plugins is defined)
+  notify: Restart Kibana
+  tags:
+    - install-kibana
+    - install-kibana-community-plugins

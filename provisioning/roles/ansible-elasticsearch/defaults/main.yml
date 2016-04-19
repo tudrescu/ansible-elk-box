@@ -50,6 +50,7 @@ elasticsearch_plugins:
   - { short: 'kopf', name: 'lmenezes/elasticsearch-kopf' }
   - { short: 'license', name: 'license' }
   - { short: 'marvel-agent', name: 'marvel-agent' }
+  - { short: 'graph', name: 'graph'}
 
 # elasticsearch_templates:
 #    - { name: 'elasticsearch_custom_template.json'}

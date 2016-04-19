@@ -1,14 +1,15 @@
 ---
 # Kibana Ansible defaults
 
-kibana_force_install: "true"
+# kibana_force_install: "true"
 
 kibana_group: kibana
 kibana_user: kibana
 
-kibana_version: "4.5.0"                         # version to install
-kibana_os: "linux"                              # Kibana operating system build
-kibana_arch: "x64"                              # Kibana architecture build
+
+# kibana_version: "4.5.0"                         # version to install
+# kibana_os: "linux"                              # Kibana operating system build
+# kibana_arch: "x64"                              # Kibana architecture build
 
 kibana_dir: "/opt/kibana"                       # Directory to extract the Kibana archive
 
@@ -31,16 +32,28 @@ kibana_log: "{{ kibana_log_dir }}/kibana.log"   # Kibana log path
 # Repositories
 # https://download.elastic.co/kibana/kibana/kibana-4.5.0-linux-x64.tar.gz
 
-kibana_download_url: "https://download.elastic.co/kibana/kibana"
+# kibana_download_url: "https://download.elastic.co/kibana/kibana"
 plugins_download_url: "https://download.elastic.co"
 
-# kibana_apt_repo: "deb http://packages.elasticsearch.org/kibana/{{ kibana_version }}/debian stable main"
-# kibana_repo_key: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+kibana_branch: "4.5"
+kibana_apt_repo: "deb http://packages.elastic.co/kibana/{{ kibana_branch }}/debian stable main"
+kibana_repo_key: "https://packages.elastic.co/GPG-KEY-elasticsearch"
+kibana_apt_source_list: "/etc/apt/sources.list.d/kibana-{{ kibana_branch }}.list"
 
+# official plugins, hosted by elastic
 kibana_plugins:
   - { short: 'marvel', name: 'elasticsearch/marvel/latest', path: 'elasticsearch/marvel', version: 'latest' }
   - { short: 'sense', name: 'elastic/sense', path: 'elastic/sense', version: 'latest' }
   - { short: 'timelion', name: 'kibana/timelion', path: 'kibana/timelion', version: 'latest' }
+  - { short: 'graph', name: 'elasticsearch/graph/latest', path: 'elasticsearch/graph', version: 'latest' }
+
+# community plugins
+kibana_community_plugins:
+  - { short: 'heatmap', url: "https://github.com/stormpython/heatmap/archive/master.zip" }
+  - { short: 'vectormap', url: "https://github.com/stormpython/vectormap/archive/master.zip" }
+  - { short: 'kibana-html-plugin', url: "https://github.com/raystorm-place/kibana-html-plugin/archive/master.zip" }
+  - { short: 'kibi_radar_vis', url: "https://github.com/sirensolutions/kibi_radar_vis/archive/0.1.0.zip" }
+  - { short: 'kibi_timeline_vis', url: "https://github.com/sirensolutions/kibi_timeline_vis/raw/0.1.2/target/kibi_timeline_vis-0.1.2.zip" }
 
 # Service Parameters
 kibana_service_startonboot: yes
