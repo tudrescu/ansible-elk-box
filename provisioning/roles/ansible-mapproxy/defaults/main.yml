@@ -15,7 +15,7 @@ mapproxy_wsgi_root_dir: /var/www/html
 mapproxy_home_dir: "{{ mapproxy_wsgi_root_dir }}/mapproxy"
 mapproxy_cache_data_dir: "{{ mapproxy_wsgi_root_dir }}/mapproxy/cache_data"
 
-seed_cache: "true"                 # download seeds
+seed_cache: "false"                 # download seeds
 
 mapproxy_service:
   config: "mapproxy.yml"

@@ -49,3 +49,13 @@
     owner="{{ kibana_user }}"
     group="{{ kibana_group }}"
     recurse=yes
+
+# Configure directories
+- name: Fix permission for logs
+  file:
+    path: "{{ kibana_log_dir }}"
+    state: directory
+    owner: "{{ kibana_user }}"
+    group: "{{ kibana_group }}"
+    recurse: yes
+  when: kibana_log_dir is defined
